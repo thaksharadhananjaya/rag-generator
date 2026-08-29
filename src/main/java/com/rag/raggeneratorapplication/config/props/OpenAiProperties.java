@@ -1,6 +1,9 @@
 package com.rag.raggeneratorapplication.config.props;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Configuration for the OpenAI-backed LLM and embedding adapters.
@@ -11,29 +14,24 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *                           must match the {@code vector(N)} column in the schema
  */
 @ConfigurationProperties(prefix = "app.openai")
+@Validated
 public record OpenAiProperties(
-        String baseUrl,
-        String apiKey,
-        String chatModel,
-        String embeddingModel,
-        int embeddingDimension,
-        int timeoutSeconds) {
 
-    public OpenAiProperties {
-        if (baseUrl == null || baseUrl.isBlank()) {
-            baseUrl = "https://api.openai.com/v1";
-        }
-        if (chatModel == null || chatModel.isBlank()) {
-            chatModel = "gpt-4o-mini";
-        }
-        if (embeddingModel == null || embeddingModel.isBlank()) {
-            embeddingModel = "text-embedding-3-small";
-        }
-        if (embeddingDimension <= 0) {
-            embeddingDimension = 1536;
-        }
-        if (timeoutSeconds <= 0) {
-            timeoutSeconds = 60;
-        }
-    }
+        @NotBlank
+        String baseUrl,
+
+        @NotBlank
+        String apiKey,
+
+        @NotBlank
+        String chatModel,
+
+        @NotBlank
+        String embeddingModel,
+
+        @Min(1)
+        int embeddingDimension,
+
+        @Min(1)
+        int timeoutSeconds) {
 }

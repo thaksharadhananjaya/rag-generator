@@ -5,8 +5,7 @@ public record LlmMessage(Role role, String content) {
 
     public enum Role {
         SYSTEM,
-        USER,
-        ASSISTANT
+        USER
     }
 
     public static LlmMessage system(String content) {
@@ -17,7 +16,4 @@ public record LlmMessage(Role role, String content) {
         return new LlmMessage(Role.USER, content);
     }
 
-    public static LlmMessage assistant(String content) {
-        return new LlmMessage(Role.ASSISTANT, content);
-    }
 }

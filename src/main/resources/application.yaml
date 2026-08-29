@@ -34,7 +34,7 @@ springdoc:
 app:
   openai:
     base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
-    api-key: ${OPENAI_API_KEY:}
+    api-key: ${OPENAI_API_KEY:xxx}
     chat-model: ${OPENAI_CHAT_MODEL:gpt-4o-mini}
     embedding-model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}
     embedding-dimension: ${OPENAI_EMBEDDING_DIMENSION:1536}
