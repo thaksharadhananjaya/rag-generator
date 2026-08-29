@@ -15,7 +15,7 @@ CREATE TABLE chunk (
     embedding_model   VARCHAR(100) NOT NULL,
     -- Fixed dimension: text-embedding-3-small = 1536. A different embedding model
     -- with a different dimension requires a new migration and a re-embed.
-    embedding         vector(1536) NOT NULL,
+    embedding         vector(768) NOT NULL,
     created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (document_id, ordinal)
 );
