@@ -1,4 +1,4 @@
-package com.rag.raggeneratorapplication.infrastructure.ai;
+package com.rag.raggeneratorapplication.infrastructure.ai.openai;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rag.raggeneratorapplication.config.props.OpenAiProperties;
@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
@@ -18,8 +19,11 @@ import org.springframework.web.client.RestClientException;
  * Embedding adapter for the OpenAI {@code /embeddings} API. Splits large inputs
  * into fixed-size batches and retries a failed batch a couple of times before
  * surfacing {@link DependencyUnavailableException}.
+ *
+ * <p>Active unless {@code app.ai.provider=ollama}.
  */
 @Component
+@ConditionalOnProperty(prefix = "app.ai", name = "provider", havingValue = "openai")
 @RequiredArgsConstructor
 @Slf4j
 public class OpenAiEmbeddingService implements EmbeddingService {

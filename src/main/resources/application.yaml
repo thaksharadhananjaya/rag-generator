@@ -32,13 +32,22 @@ springdoc:
 # Application configuration. Secrets are read from the environment / .env and
 # fall back to local-dev defaults so the context still starts without them.
 app:
+  # Which AI provider backs the EmbeddingService and LlmService: openai | ollama
+  ai:
+    provider: ${AI_PROVIDER:ollama}
   openai:
     base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
     api-key: ${OPENAI_API_KEY:xxx}
     chat-model: ${OPENAI_CHAT_MODEL:gpt-4o-mini}
     embedding-model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}
-    embedding-dimension: ${OPENAI_EMBEDDING_DIMENSION:1536}
+    embedding-dimension: ${OPENAI_EMBEDDING_DIMENSION:768}
     timeout-seconds: 60
+  ollama:
+    base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+    chat-model: ${OLLAMA_CHAT_MODEL:llama3.1}
+    embedding-model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
+    embedding-dimension: ${OLLAMA_EMBEDDING_DIMENSION:768}
+    timeout-seconds: ${OLLAMA_TIMEOUT_SECONDS:60}
   minio:
     endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
     access-key: ${MINIO_ACCESS_KEY:minioadmin}

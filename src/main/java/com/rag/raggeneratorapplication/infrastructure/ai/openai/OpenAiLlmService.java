@@ -1,4 +1,4 @@
-package com.rag.raggeneratorapplication.infrastructure.ai;
+package com.rag.raggeneratorapplication.infrastructure.ai.openai;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
@@ -21,8 +22,11 @@ import org.springframework.web.client.RestClientException;
  * LLM adapter for the OpenAI {@code /chat/completions} API. Maps the neutral
  * {@link LlmRequest}/{@link LlmResponse} to the provider wire format, retries a
  * failed call a couple of times, and surfaces {@link DependencyUnavailableException}.
+ *
+ * <p>Active unless {@code app.ai.provider=ollama}.
  */
 @Component
+@ConditionalOnProperty(prefix = "app.ai", name = "provider", havingValue = "openai")
 @RequiredArgsConstructor
 @Slf4j
 public class OpenAiLlmService implements LlmService {

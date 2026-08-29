@@ -2,6 +2,7 @@ package com.rag.raggeneratorapplication.config;
 
 import com.rag.raggeneratorapplication.config.props.DocumentProperties;
 import com.rag.raggeneratorapplication.config.props.MinioProperties;
+import com.rag.raggeneratorapplication.config.props.OllamaProperties;
 import com.rag.raggeneratorapplication.config.props.OpenAiProperties;
 import com.rag.raggeneratorapplication.config.props.ProcessingProperties;
 import com.rag.raggeneratorapplication.config.props.RetrievalProperties;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({
         OpenAiProperties.class,
+        OllamaProperties.class,
         MinioProperties.class,
         RetrievalProperties.class,
         ProcessingProperties.class,
