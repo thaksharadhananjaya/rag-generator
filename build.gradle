@@ -8,6 +8,12 @@ group = 'com.rag'
 version = '0.0.1-SNAPSHOT'
 description = 'RagGeneratorApplication'
 
+ext {
+    springAiVersion = '2.0.1'
+    minioVersion = '8.5.17'
+    pgvectorVersion = '0.1.6'
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -18,9 +24,21 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+    }
+}
+
 dependencies {
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     //
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -28,12 +46,22 @@ dependencies {
     implementation 'org.flywaydb:flyway-database-postgresql'
     // API Documentation
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.0'
+    // External capability adapters (infrastructure)
+    implementation 'org.springframework.ai:spring-ai-commons'
+    implementation 'org.springframework.ai:spring-ai-pdf-document-reader'
+    implementation 'org.springframework.ai:spring-ai-tika-document-reader'
+    implementation "io.minio:minio:${minioVersion}"
+    implementation "com.pgvector:pgvector:${pgvectorVersion}"
     //
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-flyway-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
+    testImplementation 'org.testcontainers:testcontainers-postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
