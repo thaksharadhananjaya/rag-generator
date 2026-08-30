@@ -42,27 +42,32 @@ app:
     embedding-model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}
     embedding-dimension: ${OPENAI_EMBEDDING_DIMENSION:768}
     timeout-seconds: 60
+
   ollama:
     base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
     chat-model: ${OLLAMA_CHAT_MODEL:llama3.1}
     embedding-model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
     embedding-dimension: ${OLLAMA_EMBEDDING_DIMENSION:768}
     timeout-seconds: ${OLLAMA_TIMEOUT_SECONDS:60}
+
   minio:
     endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
     access-key: ${MINIO_ACCESS_KEY:minioadmin}
     secret-key: ${MINIO_SECRET_KEY:minioadmin123}
     bucket: ${MINIO_BUCKET:rag-documents}
+
   retrieval:
-    top-k: 5
-    min-score: 0.70
+    top-k: ${TOP_K:5}
+    min-score: ${MIN_SCORE:0.6}
+
   processing:
-    chunk-size-tokens: 800
-    min-chunk-size-chars: 350
+    chunk-size-tokens: ${CHUNK_SIZE_TOKENS:800}
+    min-chunk-size-chars: ${MIN_CHUNK_SIZE_CHARS:350}
+
   document:
     # Empty list => accept any content type (the extractor decides). See DocumentProperties for the default allow-list.
     allowed-content-types:
-      - application/pdf
+      ${ALLOWED_CONTENT_TYPES:application/pdf}
 
 cors:
   allowed-origins: ${ALLOWED_CROS_ORIGINS:http://localhost:3000}
