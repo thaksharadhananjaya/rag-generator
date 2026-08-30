@@ -206,7 +206,7 @@ PostgreSQL, MinIO, and Ollama do not need to be installed separately when using 
 
 Environment configuration is **optional** for the default local setup.
 
-```The application provides sensible default values for local development, so the complete system can be started directly with:```
+```👉 The application provides sensible default values for local development, so the complete system can be started directly with:```
 
 ```bash
 docker compose up -d --build
@@ -253,7 +253,7 @@ Docker Compose will start the complete application stack, including:
 * Ollama
 * Required Ollama chat and embedding models
 
-```The default configuration is designed to work locally without requiring external services or API keys.```
+```👉 The default configuration is designed to work locally without requiring external services or API keys.```
 
 On the first startup, Ollama may take some time to download the configured models. The downloaded models are persisted in a Docker volume and are reused on subsequent starts.
 
