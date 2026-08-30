@@ -1,11 +1,11 @@
 .git/
 .github/
-.gitignore
+../.gitignore
 
-.gradle/
-build/
+backend/.gradle/
+backend/build/
 
-.idea/
+backend/.idea/
 .vscode/
 
 *.iml
