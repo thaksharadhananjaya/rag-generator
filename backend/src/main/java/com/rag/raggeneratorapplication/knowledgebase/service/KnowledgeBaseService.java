@@ -21,7 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Knowledge base lifecycle: create, retrieve, list, delete. Concrete by design
- * (single implementation, no port needed).
+ *
+ * @author Thakshara Dhananjaya
  */
 @Service
 @RequiredArgsConstructor

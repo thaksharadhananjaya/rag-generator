@@ -34,6 +34,8 @@ import org.springframework.transaction.support.TransactionTemplate;
  *
  * <p>Keeps an explicit constructor because it derives a {@link TransactionTemplate}
  * from the injected transaction manager rather than storing a plain dependency.
+ *
+ * @author Thakshara Dhananjaya
  */
 @Service
 @Slf4j

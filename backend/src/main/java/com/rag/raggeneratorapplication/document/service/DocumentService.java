@@ -28,7 +28,9 @@ import org.springframework.web.multipart.MultipartFile;
  * Document lifecycle: upload &amp; validate, retrieve, list, delete, and
  * (re)trigger ingestion. Ingestion itself is delegated to
  * {@link DocumentIngestionService} and always started <em>after</em> the current
- * transaction commits, so the async worker sees a persisted row.
+ *
+ *
+ * @author Thakshara Dhananjaya
  */
 @Service
 @RequiredArgsConstructor

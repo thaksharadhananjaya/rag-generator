@@ -24,6 +24,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+/**
+ * REST controller for Knowledge Base management.
+ *
+ * <p>Provides endpoints for creating, retrieving, listing, and deleting
+ * knowledge bases. Business logic is delegated to {@link KnowledgeBaseService}.
+ *
+ * @author Thakshara Dhananjaya
+ */
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/knowledge-bases")

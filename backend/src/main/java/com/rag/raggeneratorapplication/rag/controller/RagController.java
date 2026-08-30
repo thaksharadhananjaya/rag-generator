@@ -12,6 +12,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller for Retrieval-Augmented Generation (RAG) queries.
+ *
+ * <p>Accepts questions scoped to a specific knowledge base and delegates
+ * answer generation to {@link RagService}.
+ *
+ * @author Thakshara Dhananjaya
+ */
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/knowledge-bases/{knowledgeBaseId}/query")

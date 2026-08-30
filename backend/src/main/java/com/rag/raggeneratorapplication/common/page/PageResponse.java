@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 /**
  * Serializable page envelope for list endpoints. Keeps the API contract
  * independent of Spring Data's {@code Page} representation.
+ *
+ * @author Thakshara Dhananjaya
  */
 public record PageResponse<T>(
         List<T> content,

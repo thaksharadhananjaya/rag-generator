@@ -9,6 +9,8 @@ import java.util.List;
  * timeouts and retries. {@link #modelId()} and {@link #dimension()} let callers
  * record which model produced stored vectors and reject queries that would mix
  * incompatible models.
+ *
+ * @author Thakshara Dhananjaya
  */
 public interface EmbeddingService {
 

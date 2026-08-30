@@ -2,7 +2,7 @@
 # Build stage
 # ==============================
 FROM eclipse-temurin:21-jdk AS builder
-LABEL authors="thakshara"
+LABEL authors="thaksharadhananjaya@gmail.com"
 
 WORKDIR /app
 

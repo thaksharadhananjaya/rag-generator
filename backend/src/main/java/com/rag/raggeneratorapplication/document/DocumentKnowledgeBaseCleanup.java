@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
  * knowledge base is deleted. The document and chunk <em>rows</em> are removed by
  * the {@code ON DELETE CASCADE} on the knowledge base row; only the external
  * object-storage objects need explicit cleanup here.
+ *
+ * @author Thakshara Dhananjaya
  */
 @Component
 @RequiredArgsConstructor

@@ -22,8 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * {@link FileStorageService} backed by MinIO (S3-compatible). The bucket is
- * created on first use. The object key is supplied by the caller.
+ * {@link FileStorageService} backed by MinIO (Object Storage).
+ * The bucket is created on first use. The object key is supplied by the caller.
+ *
+ * @author Thakshara Dhananjaya
  */
 @Component
 @RequiredArgsConstructor
@@ -35,6 +37,14 @@ public class MinioFileStorageService implements FileStorageService {
     private final MinioClient minioClient;
     private final MinioProperties properties;
 
+    /**
+     * Stores an uploaded file in the configured MinIO bucket.
+     *
+     * @param storageKey object key used to identify the stored file
+     * @param upload file content and metadata to store
+     * @return metadata describing the stored file
+     * @throws DependencyUnavailableException if MinIO is unavailable
+     */
     @Override
     public StoredFile store(String storageKey, FileUpload upload) {
         ensureBucketExists();
@@ -66,6 +76,14 @@ public class MinioFileStorageService implements FileStorageService {
         return new StoredFile(storageKey, upload.size(), contentType);
     }
 
+    /**
+     * Retrieves a stored file from MinIO.
+     *
+     * @param storageKey object key identifying the stored file
+     * @return file content and its storage metadata
+     * @throws NotFoundException if the requested file does not exist
+     * @throws DependencyUnavailableException if MinIO cannot be accessed
+     */
     @Override
     public FileContent retrieve(String storageKey) {
         try {
@@ -84,6 +102,15 @@ public class MinioFileStorageService implements FileStorageService {
         }
     }
 
+    /**
+     * Deletes a stored file from MinIO.
+     *
+     * <p>The operation is idempotent: deleting a file that does not exist
+     * is treated as a successful operation.
+     *
+     * @param storageKey object key identifying the file to delete
+     * @throws DependencyUnavailableException if MinIO cannot be accessed
+     */
     @Override
     public void delete(String storageKey) {
         try {
@@ -99,6 +126,14 @@ public class MinioFileStorageService implements FileStorageService {
         }
     }
 
+    /**
+     * Ensures that the configured MinIO bucket exists.
+     *
+     * <p>The bucket is created lazily when the first file is stored.
+     *
+     * @throws DependencyUnavailableException if the bucket cannot be checked
+     *                                        or created
+     */
     private void ensureBucketExists() {
         try {
             boolean exists = minioClient.bucketExists(BucketExistsArgs.builder()
@@ -111,6 +146,12 @@ public class MinioFileStorageService implements FileStorageService {
         }
     }
 
+    /**
+     * Determines whether a MinIO error indicates that an object does not exist.
+     *
+     * @param e MinIO error response
+     * @return {@code true} when the error represents a missing object
+     */
     private static boolean isNotFound(ErrorResponseException e) {
         String code = e.errorResponse() == null ? null : e.errorResponse().code();
         return "NoSuchKey".equals(code) || "NoSuchObject".equals(code);

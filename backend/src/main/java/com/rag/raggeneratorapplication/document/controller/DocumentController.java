@@ -24,6 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+/**
+ * REST controller for document management and ingestion.
+ *
+ * <p>Provides endpoints for uploading, retrieving, listing, re-ingesting,
+ * and deleting documents associated with knowledge bases.
+ *
+ * @author Thakshara Dhananjaya
+ */
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")

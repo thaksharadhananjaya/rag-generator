@@ -21,8 +21,9 @@ import org.springframework.stereotype.Service;
 /**
  * Answers questions against a knowledge base:
  * retrieve relevant chunks &rarr; build a grounded prompt &rarr; call the LLM &rarr;
- * return the answer with its sources. Depends only on application ports for the
- * LLM, embeddings and vector store.
+ * return the answer with its sources. Depends only on application ports for the LLM, embeddings and vector store.
+ *
+ * @author Thakshara Dhananjaya
  */
 @Service
 @RequiredArgsConstructor

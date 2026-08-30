@@ -6,6 +6,8 @@ package com.rag.raggeneratorapplication.port.llm;
  * <p>Implementations live in {@code infrastructure} and are responsible for
  * provider wire format, authentication, timeouts and retries. Callers depend
  * only on this interface and the neutral request/response records.
+ *
+ * @author Thakshara Dhananjaya
  */
 public interface LlmService {
 
