@@ -18,7 +18,7 @@ No Redux, no auth middleware, no extra state libraries.
 ## Getting started
 
 ```bash
-cp .env.example .env.local   # then edit if your backend is elsewhere
+cp .env.example .env   # then edit if your backend is elsewhere
 npm install
 npm run dev                  # http://localhost:3000
 ```
