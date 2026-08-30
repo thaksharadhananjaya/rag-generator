@@ -1,0 +1,172 @@
+services:
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: rag-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${DB_NAME:-rag}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-rag}"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+  minio:
+    image: minio/minio:latest
+    container_name: rag-minio
+    restart: unless-stopped
+
+    command: server /data --console-address ":9001"
+
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin123}
+
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+    volumes:
+      - minio_data:/data
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:9000/minio/health/live"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: rag-ollama
+    restart: unless-stopped
+
+    ports:
+      - "11434:11434"
+
+    volumes:
+      - ollama_data:/root/.ollama
+
+
+  ollama-init:
+    image: ollama/ollama:latest
+    container_name: rag-ollama-init
+
+    depends_on:
+      - ollama
+
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+      OLLAMA_CHAT_MODEL: ${OLLAMA_CHAT_MODEL:-qwen2.5:1.5b}
+      OLLAMA_EMBEDDING_MODEL: ${OLLAMA_EMBEDDING_MODEL:-nomic-embed-text}
+
+    entrypoint: ["/bin/sh", "-c"]
+
+    command: >
+      "
+      echo 'Waiting for Ollama...' &&
+      until ollama list >/dev/null 2>&1; do
+        sleep 2;
+      done &&
+      echo 'Pulling LLM model: '$$OLLAMA_CHAT_MODEL &&
+      ollama pull $$OLLAMA_CHAT_MODEL &&
+      echo 'Pulling embedding model: '$$OLLAMA_EMBEDDING_MODEL &&
+      ollama pull $$OLLAMA_EMBEDDING_MODEL &&
+      echo 'Ollama models are ready'
+      "
+
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+
+    container_name: rag-backend
+    restart: unless-stopped
+
+    ports:
+      - "${SERVER_PORT:-8080}:${SERVER_PORT:-8080}"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      minio:
+        condition: service_healthy
+
+      ollama:
+        condition: service_started
+
+      ollama-init:
+        condition: service_completed_successfully
+
+    environment:
+      # Server
+      SERVER_PORT: ${SERVER_PORT:-8080}
+
+      # PostgreSQL
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-rag}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+
+      # AI
+      AI_PROVIDER: ${AI_PROVIDER:-ollama}
+
+      # OpenAI
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-xxx}
+      OPENAI_CHAT_MODEL: ${OPENAI_CHAT_MODEL:-gpt-4o-mini}
+      OPENAI_EMBEDDING_MODEL: ${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
+      OPENAI_EMBEDDING_DIMENSION: ${OPENAI_EMBEDDING_DIMENSION:-768}
+      OPENAI_TIMEOUT_SECONDS: ${OPENAI_TIMEOUT_SECONDS:-60}
+
+      # Ollama
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_CHAT_MODEL: ${OLLAMA_CHAT_MODEL:-qwen2.5:1.5b}
+      OLLAMA_EMBEDDING_MODEL: ${OLLAMA_EMBEDDING_MODEL:-nomic-embed-text}
+      OLLAMA_EMBEDDING_DIMENSION: ${OLLAMA_EMBEDDING_DIMENSION:-768}
+      OLLAMA_TIMEOUT_SECONDS: ${OLLAMA_TIMEOUT_SECONDS:-60}
+
+      # MinIO
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin123}
+      MINIO_BUCKET: ${MINIO_BUCKET:-rag-documents}
+
+      # RAG
+      TOP_K: ${TOP_K:-5}
+      MIN_SCORE: ${MIN_SCORE:-0.6}
+
+      # Document processing
+      CHUNK_SIZE_TOKENS: ${CHUNK_SIZE_TOKENS:-800}
+      MIN_CHUNK_SIZE_CHARS: ${MIN_CHUNK_SIZE_CHARS:-350}
+      ALLOWED_CONTENT_TYPES: ${ALLOWED_CONTENT_TYPES:-application/pdf}
+
+      # CORS
+      ALLOWED_CORS_ORIGINS: ${ALLOWED_CORS_ORIGINS:-http://localhost:3000}
+
+
+volumes:
+  postgres_data:
+  minio_data:
+  ollama_data:
