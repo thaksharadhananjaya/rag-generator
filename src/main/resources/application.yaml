@@ -56,7 +56,6 @@ app:
   retrieval:
     top-k: 5
     min-score: 0.70
-    max-context-tokens: 3000
   processing:
     chunk-size-tokens: 800
     min-chunk-size-chars: 350
@@ -64,3 +63,6 @@ app:
     # Empty list => accept any content type (the extractor decides). See DocumentProperties for the default allow-list.
     allowed-content-types:
       - application/pdf
+
+cors:
+  allowed-origins: ${ALLOWED_CROS_ORIGINS:http://localhost:3000}
