@@ -65,7 +65,7 @@ Generated Answer
 * Spring AI
 * Hibernate
 * Gradle
-* Flyway
+* Flyway (DB Migrations)
 
 ### Frontend
 
@@ -91,6 +91,8 @@ Generated Answer
 
 * OpenAI
 * Ollama
+
+>**🧵Java virtual threads** are enabled in the Spring Boot backend to efficiently handle I/O-bound operations such as database, storage, and AI service calls.
 
 ## Architecture
 
