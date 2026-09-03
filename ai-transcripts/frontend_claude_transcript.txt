@@ -1,0 +1,2363 @@
+ ▐▛███▛█   Claude Code v2.1.251
+▝▜██████▀  Sonnet 5 · Claude Pro
+  ▝▝ ▝▝    ~/Documents/Projects/Othor/Rag Generator Application/frontend
+
+
+❯ <ide_opened_file>The user opened the file                                     
+  /home/thakshara/Documents/Projects/Othor/reg-generator-frontend/package.json  
+  in the IDE. This may or may not be related to the current                     
+  task.</ide_opened_file>                                                       
+
+❯ Build the Next.js(version:16.3.3) frontend for the RAG Generator based on the 
+  Backend endpoints.                                                            
+                                                                                
+  Use Next.js with TypeScript, Tailwind CSS, React Query, React Hook Form, and  
+  Zod.                                                                          
+                                                                                
+  The frontend should provide a clean, responsive user flow:                    
+                                                                                
+  Create Knowledge Base * Upload PDF * Monitor ingestion status * Ask questions 
+  * Display grounded answer and sources.                                        
+                                                                                
+  Do not change the backend API contract.                                       
+                                                                                
+  IMPORTANT: Use ONLY the backend endpoints listed below. Do not invent,        
+  rename, combine, or create additional backend endpoints.                      
+                                                                                
+  ## Backend API Endpoints                                                      
+                                                                                
+  ### Knowledge Base APIs                                                       
+                                                                                
+  Create a knowledge base:                                                      
+                                                                                
+  POST /api/v1/knowledge-bases                                                  
+                                                                                
+  Request body:                                                                 
+                                                                                
+  ```json                                                                       
+  {                                                                             
+    "name": "Company Handbook",                                                 
+    "description": "Company policies and guidelines"                            
+  }                                                                             
+  ```                                                                           
+                                                                                
+  List knowledge bases:                                                         
+                                                                                
+  GET /api/v1/knowledge-bases                                                   
+                                                                                
+  Use the `pageable` query parameters:                                          
+                                                                                
+  ```text                                                                       
+  ?page=0&size=20&sort=createdAt,desc                                           
+  ```                                                                           
+                                                                                
+  Get a knowledge base:                                                         
+                                                                                
+  GET /api/v1/knowledge-bases/{id}                                              
+                                                                                
+  Delete a knowledge base:                                                      
+                                                                                
+  DELETE /api/v1/knowledge-bases/{id}                                           
+                                                                                
+  The delete operation returns HTTP 204 with no response body.                  
+                                                                                
+  ### Document APIs                                                             
+                                                                                
+  Upload a PDF document to a knowledge base:                                    
+                                                                                
+  POST /api/v1/knowledge-bases/{knowledgeBaseId}/documents                      
+                                                                                
+  Request content type:                                                         
+                                                                                
+  multipart/form-data                                                           
+                                                                                
+  Request field:                                                                
+                                                                                
+  ```text                                                                       
+  file                                                                          
+  ```                                                                           
+                                                                                
+  List documents belonging to a knowledge base:                                 
+                                                                                
+  GET /api/v1/knowledge-bases/{knowledgeBaseId}/documents                       
+                                                                                
+  Use the `pageable` query parameters:                                          
+                                                                                
+  ```text                                                                       
+  ?page=0&size=20&sort=createdAt,desc                                           
+  ```                                                                           
+                                                                                
+  Get a document:                                                               
+                                                                                
+  GET /api/v1/documents/{documentId}                                            
+                                                                                
+  Delete a document:                                                            
+                                                                                
+  DELETE /api/v1/documents/{documentId}                                         
+                                                                                
+  The delete operation returns HTTP 204 with no response body.                  
+                                                                                
+  Re-ingest a document:                                                         
+                                                                                
+  POST /api/v1/documents/{documentId}/ingest                                    
+                                                                                
+  This endpoint returns HTTP 202 Accepted and should be used for retrying       
+  failed ingestion.                                                             
+                                                                                
+  ### RAG Query API                                                             
+                                                                                
+  Ask a question against a specific knowledge base:                             
+                                                                                
+  POST /api/v1/knowledge-bases/{knowledgeBaseId}/query                          
+                                                                                
+  Request body:                                                                 
+                                                                                
+  ```json                                                                       
+  {                                                                             
+    "question": "What is the annual leave policy?",                             
+    "topK": 5,                                                                  
+    "minScore": 0.7                                                             
+  }                                                                             
+  ```                                                                           
+                                                                                
+  `question` is required and has a maximum length of 4000 characters.           
+                                                                                
+  `topK` is optional and must be between 0 and 50.                              
+                                                                                
+  `minScore` is optional and must be between 0 and 1.                           
+                                                                                
+  Do not create a separate conversation/chat endpoint. All questions must use   
+  the existing knowledge-base query endpoint.                                   
+                                                                                
+  ## Frontend Pages                                                             
+                                                                                
+  Create:                                                                       
+                                                                                
+  ```text                                                                       
+  /knowledge-bases                                                              
+  /knowledge-bases/[id]                                                         
+  ```                                                                           
+                                                                                
+  ### `/knowledge-bases`                                                        
+                                                                                
+  Show a paginated list of knowledge bases.                                     
+                                                                                
+  Provide:                                                                      
+                                                                                
+  Create Knowledge Base                                                         
+  ──── (409 lines hidden) ───────────────────────────────────────────────────── 
+                                                                                
+  ! Failed                                                                      
+  ```                                                                           
+                                                                                
+  ## Dependencies                                                               
+                                                                                
+  Use:                                                                          
+                                                                                
+  Next.js                                                                       
+                                                                                
+  TypeScript                                                                    
+                                                                                
+  Tailwind CSS                                                                  
+                                                                                
+  TanStack React Query                                                          
+                                                                                
+  React Hook Form                                                               
+                                                                                
+  Zod                                                                           
+                                                                                
+  Do not add Redux.                                                             
+                                                                                
+  Do not add NextAuth or authentication middleware because authentication is    
+  not part of the current backend API.                                          
+                                                                                
+  Do not introduce additional state-management libraries unless there is a      
+  concrete requirement.                                                         
+                                                                                
+  ## Implementation Order                                                       
+                                                                                
+  Implement in this order:                                                      
+                                                                                
+  1. Inspect the existing Next.js project structure.                            
+                                                                                
+  2. Remove any unnecessary template code, including authentication/NextAuth    
+  code if present.                                                              
+                                                                                
+  3. Set up centralized API client and environment configuration.               
+                                                                                
+  4. Create TypeScript API models matching the Swagger schemas.                 
+                                                                                
+  5. Create Zod validation schemas.                                             
+                                                                                
+  6. Create React Query provider and API hooks.                                 
+                                                                                
+  7. Implement `/knowledge-bases`.                                              
+                                                                                
+  8. Implement create/delete knowledge base functionality.                      
+                                                                                
+  9. Implement `/knowledge-bases/[id]`.                                         
+                                                                                
+  10. Implement document listing.                                               
+                                                                                
+  11. Implement PDF upload and client-side validation.                          
+                                                                                
+  12. Implement document status polling/refetching.                             
+                                                                                
+  13. Implement failed ingestion and re-ingestion.                              
+                                                                                
+  14. Implement document deletion.                                              
+                                                                                
+  15. Implement the Ask Questions interface.                                    
+                                                                                
+  16. Implement grounded answer and source rendering.                           
+                                                                                
+  17. Implement centralized backend error handling.                             
+                                                                                
+  18. Implement loading, empty, error, and retry states.                        
+                                                                                
+  19. Polish responsive behavior and accessibility.                             
+                                                                                
+  20. Verify every frontend API call against the exact endpoints and HTTP       
+  methods defined above.                                                        
+                                                                                
+  Do not modify the backend.                                                    
+                                                                                
+  Do not invent endpoints.                                                      
+                                                                                
+  Do not expose backend implementation details in the UI.                       
+                                                                                
+  After implementation, test the complete flow:                                 
+                                                                                
+  Create Knowledge Base                                                         
+  * Upload PDF                                                                  
+  * Document becomes PENDING                                                    
+  * Document becomes PROCESSING/EMBEDDING                                       
+  * Document becomes COMPLETED                                                  
+  * Ask question                                                                
+  * Receive grounded answer                                                     
+  * Display sources                                                             
+                                                                                
+  ###HTTP Client and Server State                                               
+                                                                                
+  Use Axios as the HTTP client for all communication with the Spring Boot       
+  backend.                                                                      
+                                                                                
+  Use TanStack React Query for server-state management.                         
+                                                                                
+  Keep these responsibilities separate:                                         
+                                                                                
+  Axios is responsible for making HTTP requests.                                
+                                                                                
+  TanStack React Query is responsible for query caching, loading states, error  
+  states, refetching, polling, mutations, and cache invalidation.               
+                                                                                
+  Do not call fetch() directly from React components.                           
+                                                                                
+  Create a centralized Axios client:                                            
+                                                                                
+  lib/api/client.ts                                                             
+                                                                                
+  Configure the API base URL through:                                           
+                                                                                
+  NEXT_PUBLIC_API_UR                                                            
+                                                                                
+  The final frontend should be production-quality in structure while remaining  
+  appropriately simple for this RAG Generator assessment.                       
+
+  Listed 1 directory, ran 3 shell commands (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/.env.example)
+  ⎿  Wrote 6 lines to ../../reg-generator-frontend/.env.example
+      1 # Base URL of the Spring Boot backend (no trailing slash)
+      2 NEXT_PUBLIC_API_URL=http://localhost:8080
+      3 
+      4 # Maximum PDF upload size accepted by the frontend, in megabytes.
+      5 # Backend validation remains authoritative.
+      6 NEXT_PUBLIC_MAX_UPLOAD_MB=25
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/.env.local)
+  ⎿  Wrote 2 lines to ../../reg-generator-frontend/.env.local
+      1 NEXT_PUBLIC_API_URL=http://localhost:8080
+      2 NEXT_PUBLIC_MAX_UPLOAD_MB=25
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/config.ts)
+  ⎿  Wrote 37 lines to ../../reg-generator-frontend/lib/config.ts
+       1 /**
+       2  * Centralized frontend configuration sourced from environment v
+         ariables.
+       4  */
+       5 
+       6 function readApiBaseUrl(): string {
+       7   const raw = process.env.NEXT_PUBLIC_API_URL?.trim();
+       9     // Fall back to a same-origin relative base so the app still
+          renders in
+      10     // environments where the variable was not provided.
+     … +32 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/types/api.ts)
+  ⎿  Wrote 122 lines to ../../reg-generator-frontend/lib/types/api.ts
+       1 /**
+       3  * Kept centralized and aligned with the backend Swagger/OpenAPI
+          schemas.
+       5 
+       6 /* -------------------------------------------------------------
+       7 /* Pagination                                                   
+                */
+         ----- */
+       9 
+         /
+     … +132 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/api/errors.ts)
+  ⎿  Wrote 171 lines to ../../reg-generator-frontend/lib/api/errors.ts
+       1 import { AxiosError } from "axios";
+       2 import type { ApiError } from "@/lib/types/api";
+       3 
+       5  * Centralized backend error handling.
+       6  *
+       7  * Every failed request is funnelled through {@link normalizeErr
+         or} which turns
+         aw Java/Spring
+       9  * stack traces are never surfaced to the user.
+      10  */
+     … +198 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/api/client.ts)
+  ⎿  Wrote 42 lines to ../../reg-generator-frontend/lib/api/client.ts
+       1 import axios, { AxiosError } from "axios";
+       2 import { config } from "@/lib/config";
+       3 import { normalizeError } from "@/lib/api/errors";
+       5 /**
+       6  * Centralized Axios client for all communication with the Sprin
+         g Boot backend.
+       7  *
+       9  *  - Axios (this file) performs HTTP requests only.
+      10  *  - TanStack React Query owns caching, loading/error state, po
+         lling, retries,
+     … +38 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/api/pagination.ts)
+  ⎿  Wrote 41 lines to ../../reg-generator-frontend/lib/api/pagination.ts
+       1 import type { Page } from "@/lib/types/api";
+       3 /**
+       4  * Normalize whatever paginated envelope the backend returns int
+         o our flat
+       6  *
+       7  * The documented contract is flat (`content`, `page`, `size`, `
+       8  * `totalPages`). Spring can also emit a nested `page: { number,
+          size,
+       9  * totalElements, totalPages }` object, so we handle both defens
+      10  * ever downloading extra records.
+     … +37 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/api/knowledge-base
+       -api.ts)
+  ⎿  Wrote 38 lines to
+     ../../reg-generator-frontend/lib/api/knowledge-base-api.ts
+       1 import { apiClient, pageableParams } from "@/lib/api/client";
+       2 import { normalizePage } from "@/lib/api/pagination";
+       3 import type {
+       4   CreateKnowledgeBaseRequest,
+       5   KnowledgeBase,
+       6   Page,
+       7   Pageable,
+       8 } from "@/lib/types/api";
+       9 
+      10 /**
+     … +31 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/api/document-api.t
+       s)
+  ⎿  Wrote 62 lines to ../../reg-generator-frontend/lib/api/document-api.ts
+       1 import { apiClient, pageableParams } from "@/lib/api/client";
+       3 import type { DocumentDto, Page, Pageable } from "@/lib/types/ap
+         i";
+       4 
+       6  * Document API — maps 1:1 to the backend endpoints:
+       7  *   POST   /api/v1/knowledge-bases/{knowledgeBaseId}/documents 
+       8  *   GET    /api/v1/knowledge-bases/{knowledgeBaseId}/documents 
+           (pageable)
+       9  *   GET    /api/v1/documents/{documentId}
+           (204, no body)
+     … +60 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/api/rag-api.ts)
+  ⎿  Wrote 22 lines to ../../reg-generator-frontend/lib/api/rag-api.ts
+       1 import { apiClient } from "@/lib/api/client";
+       2 import type { RagQueryRequest, RagQueryResponse } from "@/lib/ty
+         pes/api";
+       4 /**
+       5  * RAG Query API — the ONLY question-answering endpoint:
+       6  *   POST /api/v1/knowledge-bases/{knowledgeBaseId}/query
+       7  *
+         on goes here.
+       9  */
+      10 export const ragApi = {
+     … +14 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/validation/schemas
+       .ts)
+  ⎿  Wrote 85 lines to
+     ../../reg-generator-frontend/lib/validation/schemas.ts
+       1 import { z } from "zod";
+       2 import { config } from "@/lib/config";
+       4 /**
+       5  * Zod validation schemas for every form in the app.
+       6  * Bounds mirror the backend contract; backend validation stays 
+       7  */
+       8 
+       9 /* -------------------------------------------------------------
+      10 /* Create knowledge base                                        
+               */
+     … +94 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/utils/format.ts)
+  ⎿  Wrote 55 lines to ../../reg-generator-frontend/lib/utils/format.ts
+       1 /** Small display-formatting helpers. */
+       2 
+         tring {
+       4   if (bytes == null || !Number.isFinite(bytes) || bytes < 0) ret
+         urn "—";
+       6   const units = ["B", "KB", "MB", "GB", "TB"];
+       7   const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)
+         ), units.length - 1);
+       9   return `${value.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
+      10 }
+     … +54 lines (ctrl+o to expand)
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/utils/cn.ts)
+  ⎿  Wrote 4 lines to ../../reg-generator-frontend/lib/utils/cn.ts
+      1 /** Minimal className joiner — no extra dependency needed. */
+      2 export function cn(...parts: Array<string | false | null | undefi
+        ned>): string {
+      3   return parts.filter(Boolean).join(" ");
+      4 }
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/hooks/query-keys.t
+       s)
+  ⎿  Wrote 20 lines to ../../reg-generator-frontend/lib/hooks/query-keys.ts
+       1 import type { Pageable } from "@/lib/types/api";
+       2 
+       3 /** Centralized React Query cache keys. */
+       4 export const queryKeys = {
+       5   knowledgeBases: {
+       7     list: (pageable: Pageable) =>
+       8       ["knowledge-bases", "list", pageable] as const,
+       9     detail: (id: string) => ["knowledge-bases", "detail", id] as
+          const,
+      10   },
+     … +11 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/hooks/use-knowledg
+       e-bases.ts)
+  ⎿  Wrote 63 lines to
+     ../../reg-generator-frontend/lib/hooks/use-knowledge-bases.ts
+       1 "use client";
+       2 
+       3 import {
+       4   useMutation,
+       5   useQuery,
+       6   useQueryClient,
+       7   keepPreviousData,
+       8 } from "@tanstack/react-query";
+       9 import { knowledgeBaseApi } from "@/lib/api/knowledge-base-api";
+      10 import { queryKeys } from "@/lib/hooks/query-keys";
+     … +57 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/hooks/use-document
+       s.ts)
+  ⎿  Wrote 121 lines to
+     ../../reg-generator-frontend/lib/hooks/use-documents.ts
+       1 "use client";
+       2 
+       3 import {
+       4   useMutation,
+       5   useQuery,
+       6   useQueryClient,
+       7   keepPreviousData,
+       8 } from "@tanstack/react-query";
+       9 import { documentApi } from "@/lib/api/document-api";
+      10 import { queryKeys } from "@/lib/hooks/query-keys";
+     … +119 lines (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/lib/hooks/use-documen
+        ts.ts)
+  ⎿  Removed 3 lines
+      116      },
+      117    });
+      118  }
+      119 -                                                              
+      120 -// Re-exported alias to match the requested hook name list.   
+      121 -export { useReingestDocument as useReingestDocument };        
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/hooks/use-rag.ts)
+  ⎿  Wrote 24 lines to ../../reg-generator-frontend/lib/hooks/use-rag.ts
+      1 "use client";
+      2 
+      3 import { useMutation } from "@tanstack/react-query";
+      4 import { ragApi } from "@/lib/api/rag-api";
+      5 import type {
+      6   ApiError,
+      7   RagQueryRequest,
+      8   RagQueryResponse,
+      9 } from "@/lib/types/api";
+     … +16 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/app/providers.tsx)
+  ⎿  Wrote 40 lines to ../../reg-generator-frontend/app/providers.tsx
+       1 "use client";
+       2 
+       3 import { useState, type ReactNode } from "react";
+       4 import {
+       5   QueryClient,
+       6   QueryClientProvider,
+       7   type QueryClientConfig,
+       8 } from "@tanstack/react-query";
+       9 import { ToastProvider } from "@/components/ui/toast";
+      10 import { isApiError } from "@/lib/api/errors";
+     … +33 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/toast.ts
+       x)
+  ⎿  Wrote 144 lines to
+     ../../reg-generator-frontend/components/ui/toast.tsx
+       1 "use client";
+       2 
+       3 import {
+       4   createContext,
+       5   useCallback,
+       6   useContext,
+       7   useMemo,
+       8   useRef,
+       9   useState,
+      10   type ReactNode,
+     … +145 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/button.t
+       sx)
+  ⎿  Wrote 54 lines to
+     ../../reg-generator-frontend/components/ui/button.tsx
+       1 import { forwardRef, type ButtonHTMLAttributes } from "react";
+       2 import { cn } from "@/lib/utils/cn";
+       3 import { Spinner } from "@/components/ui/spinner";
+       4 
+       5 type Variant = "primary" | "secondary" | "danger" | "ghost";
+       7 
+       8 export interface ButtonProps extends ButtonHTMLAttributes<HTMLBu
+         ttonElement> {
+       9   variant?: Variant;
+      10   size?: Size;
+     … +53 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/spinner.
+       tsx)
+  ⎿  Wrote 20 lines to
+     ../../reg-generator-frontend/components/ui/spinner.tsx
+       1 import { cn } from "@/lib/utils/cn";
+       2 
+       3 export function Spinner({ className }: { className?: string }) {
+       4   return (
+       5     <svg
+         -5 w-5")}
+       7       viewBox="0 0 24 24"
+       8       fill="none"
+       9       role="status"
+      10       aria-label="Loading"
+     … +12 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/card.tsx
+       )
+  ⎿  Wrote 34 lines to ../../reg-generator-frontend/components/ui/card.tsx
+       1 import type { HTMLAttributes } from "react";
+       2 import { cn } from "@/lib/utils/cn";
+       3 
+       4 export function Card({ className, ...rest }: HTMLAttributes<HTML
+         DivElement>) {
+       6     <div
+       7       className={cn(
+       8         "rounded-xl border border-slate-200 bg-white shadow-sm",
+       9         className,
+      10       )}
+     … +30 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/field.ts
+       x)
+  ⎿  Wrote 93 lines to ../../reg-generator-frontend/components/ui/field.tsx
+       1 import { forwardRef, type InputHTMLAttributes, type TextareaHTML
+         Attributes, type ReactNode } from "react";
+       2 import { cn } from "@/lib/utils/cn";
+       4 
+       5 let idCounter = 0;
+       6 function useAutoId(explicit?: string): string {
+       7   // Deterministic per-render fallback id; explicit id always wi
+       8   if (explicit) return explicit;
+       9   idCounter += 1;
+      10   return `field-${idCounter}`;
+     … +99 lines (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/field.t
+        sx)
+  ⎿  Added 7 lines, removed 9 lines
+       1 -import { forwardRef, type InputHTMLAttributes, type TextareaHTM
+         -LAttributes, type ReactNode } from "react";                    
+       1 +import {                                                       
+       2 +  forwardRef,                                                  
+       3 +  useId,                                                       
+       4 +  type InputHTMLAttributes,                                    
+       5 +  type TextareaHTMLAttributes,                                 
+       6 +  type ReactNode,                                              
+       7 +} from "react";                                                
+       8  import { cn } from "@/lib/utils/cn";
+       9  import { FieldError } from "@/components/errors/field-error";
+      10  
+       5 -let idCounter = 0;                                             
+       6 -function useAutoId(explicit?: string): string {                
+       7 -  // Deterministic per-render fallback id; explicit id always w
+         -ins.                                                           
+       8 -  if (explicit) return explicit;                               
+       9 -  idCounter += 1;                                              
+      10 -  return `field-${idCounter}`;                                 
+      11 -}                                                              
+      12 -                                                               
+      11  interface FieldWrapProps {
+      12    label: string;
+      13    htmlFor: string;
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/field.t
+        sx)
+  ⎿  Added 4 lines, removed 2 lines
+      45    { label, error, hint, optional, id, className, ...rest },
+      46    ref,
+      47  ) {
+      48 -  const fieldId = useAutoId(id);                               
+      48 +  const reactId = useId();                                     
+      49 +  const fieldId = id ?? reactId;                               
+      50    return (
+      51      <FieldWrap label={label} htmlFor={fieldId} error={error} hi
+          nt={hint} optional={optional}>
+      52        <input
+     ...
+      70  
+      71  export const TextAreaField = forwardRef<HTMLTextAreaElement, Te
+          xtAreaFieldProps>(
+      72    function TextAreaField({ label, error, hint, optional, id, cl
+          assName, ...rest }, ref) {
+      72 -    const fieldId = useAutoId(id);                             
+      73 +    const reactId = useId();                                   
+      74 +  const fieldId = id ?? reactId;                               
+      75      return (
+      76        <FieldWrap label={label} htmlFor={fieldId} error={error} 
+          hint={hint} optional={optional}>
+      77          <textarea
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/skeleton
+       .tsx)
+  ⎿  Wrote 35 lines to
+     ../../reg-generator-frontend/components/ui/skeleton.tsx
+       1 import { cn } from "@/lib/utils/cn";
+       2 
+       3 export function Skeleton({ className }: { className?: string }) 
+       4   return (
+       5     <div
+       6       aria-hidden
+       7       className={cn("animate-pulse rounded-md bg-slate-200", cla
+       8     />
+       9   );
+      10 }
+     … +27 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/errors/fiel
+       d-error.tsx)  ⎿  Wrote 9 lines to
+     ../../reg-generator-frontend/components/errors/field-error.tsx
+      1 /** Inline validation message shown beneath a form control. */
+      2 export function FieldError({ message, id }: { message?: string; i
+        d?: string }) {
+      3   if (!message) return null;
+      4   return (
+        ed-600">
+      6       {message}
+      7     </p>
+      8   );
+      9 }
+     … +1 line (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/errors/api-
+       error-message.tsx)
+  ⎿  Wrote 92 lines to
+     ../../reg-generator-frontend/components/errors/api-error-message.tsx
+       1 import type { ApiError } from "@/lib/types/api";
+       2 import { isRetryable } from "@/lib/api/errors";
+       3 import { Button } from "@/components/ui/button";
+       4 import { cn } from "@/lib/utils/cn";
+       5 
+       6 interface Props {
+       7   error: ApiError;
+       8   /** Optional short heading, e.g. "Upload failed". */
+       9   title?: string;
+      10   onRetry?: () => void;
+     … +94 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/errors/inli
+       ne-error.tsx)
+  ⎿  Wrote 27 lines to
+     ../../reg-generator-frontend/components/errors/inline-error.tsx
+       1 import { cn } from "@/lib/utils/cn";
+       2 
+       3 /** Lightweight inline error text with an optional retry link. *
+         /
+       4 export function InlineError({
+       6   onRetry,
+       7   className,
+       8 }: {
+       9   message: string;
+      10   onRetry?: () => void;
+     … +19 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/modal.ts
+       x)
+  ⎿  Wrote 88 lines to ../../reg-generator-frontend/components/ui/modal.tsx
+       1 "use client";
+       2 
+       3 import {
+       4   useEffect,
+       5   useRef,
+       6   type ReactNode,
+       7 } from "react";
+       8 import { cn } from "@/lib/utils/cn";
+       9 
+      10 interface ModalProps {
+     … +83 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/confirm-
+       dialog.tsx)
+  ⎿  Wrote 60 lines to
+     ../../reg-generator-frontend/components/ui/confirm-dialog.tsx
+       1 "use client";
+       2 
+       3 import type { ReactNode } from "react";
+       4 import { Modal } from "@/components/ui/modal";
+       5 import { Button } from "@/components/ui/button";
+         essage";
+       7 import type { ApiError } from "@/lib/types/api";
+       8 
+       9 interface ConfirmDialogProps {
+      10   open: boolean;
+     … +54 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/empty-st
+       ate.tsx)
+  ⎿  Wrote 28 lines to
+     ../../reg-generator-frontend/components/ui/empty-state.tsx
+       1 import type { ReactNode } from "react";
+       2 import { cn } from "@/lib/utils/cn";
+       3 
+       4 interface EmptyStateProps {
+       5   title: string;
+       6   description?: string;
+       7   action?: ReactNode;
+       8   icon?: ReactNode;
+       9   className?: string;
+      10 }
+     … +23 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/paginati
+       on.tsx)
+  ⎿  Wrote 64 lines to
+     ../../reg-generator-frontend/components/ui/pagination.tsx
+       1 "use client";
+       2 
+       3 import { Button } from "@/components/ui/button";
+       4 
+       5 interface PaginationProps {
+       6   /** Zero-based current page. */
+       7   page: number;
+       8   totalPages: number;
+       9   totalElements: number;
+      10   pageSize: number;
+     … +57 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/documents/d
+       ocument-status-badge.tsx)
+  ⎿  Wrote 66 lines to ../../reg-generator-frontend/components/documents/do
+     cument-status-badge.tsx
+       1 import type { DocumentStatus } from "@/lib/types/api";
+       2 import { cn } from "@/lib/utils/cn";
+       3 
+       4 interface StatusMeta {
+       5   label: string;
+          */
+       7   glyph: string;
+       8   className: string;
+       9   animate?: boolean;
+      10 }
+     … +59 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/app/globals.css)
+  ⎿  Added 18 lines, removed 17 lines
+       1  @import "tailwindcss";
+       2  
+       3 -:root {                                                        
+       4 -  --background: #ffffff;                                       
+       5 -  --foreground: #171717;                                       
+       6 -}                                                              
+       7 -                                                               
+       3  @theme inline {
+       9 -  --color-background: var(--background);                       
+      10 -  --color-foreground: var(--foreground);                       
+      11 -  --font-sans: var(--font-geist-sans);                         
+      12 -  --font-mono: var(--font-geist-mono);                         
+       4 +  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui
+         +, sans-serif;                                                  
+       5 +  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+       6  }
+       7  
+      15 -@media (prefers-color-scheme: dark) {                          
+      16 -  :root {                                                      
+      17 -    --background: #0a0a0a;                                     
+      18 -    --foreground: #ededed;                                     
+      19 -  }                                                            
+       8 +html {                                                         
+       9 +  -webkit-text-size-adjust: 100%;                              
+      10  }
+      11  
+      12  body {
+      23 -  background: var(--background);                               
+      24 -  color: var(--foreground);                                    
+      25 -  font-family: Arial, Helvetica, sans-serif;                   
+      13 +  background: #f8fafc; /* slate-50 */                          
+      14 +  color: #0f172a; /* slate-900 */                              
+      15 +  font-family: var(--font-sans);                               
+      16  }
+      17 +                                                               
+      18 +/* Respect users who prefer reduced motion. */                 
+      19 +@media (prefers-reduced-motion: reduce) {                      
+      20 +  *,                                                           
+      21 +  *::before,                                                   
+      22 +  *::after {                                                   
+      23 +    animation-duration: 0.01ms !important;                     
+      24 +    animation-iteration-count: 1 !important;                   
+      25 +    transition-duration: 0.01ms !important;                    
+      26 +  }                                                            
+      27 +}                                                              
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/app/layout.tsx)
+  ⎿  Added 37 lines, removed 4 lines
+      1  import type { Metadata } from "next";
+      2 +import Link from "next/link";                                   
+      3  import { Geist, Geist_Mono } from "next/font/google";
+      4  import "./globals.css";
+      5 +import { Providers } from "./providers";                        
+      6  
+      7  const geistSans = Geist({
+      8    variable: "--font-geist-sans",
+     ...
+      15  });
+      16  
+      17  export const metadata: Metadata = {
+      16 -  title: "Create Next App",                                    
+      17 -  description: "Generated by create next app",                 
+      18 +  title: "RAG Generator",                                      
+      19 +  description:                                                 
+      20 +    "Create knowledge bases, upload PDFs, and ask grounded ques
+         +tions with cited sources.",                                    
+      21  };
+      22  
+      20 -export default function RootLayout({ children }: LayoutProps<"/
+         -">) {                                                          
+      23 +export default function RootLayout({                           
+      24 +  children,                                                    
+      25 +}: Readonly<{ children: React.ReactNode }>) {                  
+      26    return (
+      27      <html
+      28        lang="en"
+      29        className={`${geistSans.variable} ${geistMono.variable} h
+          -full antialiased`}
+      30      >
+      26 -      <body className="min-h-full flex flex-col">{children}</bo
+         -dy>                                                            
+      31 +      <body className="flex min-h-full flex-col bg-slate-50 tex
+         +t-slate-900">                                                  
+      32 +        <Providers>                                            
+      33 +          <header className="border-b border-slate-200 bg-white
+         +">                                                             
+      34 +            <div className="mx-auto flex max-w-5xl items-center
+         + justify-between px-4 py-3 sm:px-6">                           
+      35 +              <Link                                            
+      36 +                href="/knowledge-bases"                        
+      37 +                className="flex items-center gap-2 rounded font
+         +-semibold text-slate-900 focus-visible:outline focus-visible:ou
+         +tline-2 focus-visible:outline-offset-2 focus-visible:outline-sl
+         +ate-900"                                                       
+      38 +              >                                                
+      39 +                <span                                          
+      40 +                  aria-hidden                                  
+      41 +                  className="flex h-7 w-7 items-center justify-
+         +center rounded-lg bg-slate-900 text-sm text-white"             
+      42 +                >                                              
+      43 +                  R                                            
+      44 +                </span>                                        
+      45 +                RAG Generator                                  
+      46 +              </Link>                                          
+      47 +            </div>                                             
+      48 +          </header>                                            
+      49 +          <main className="mx-auto w-full max-w-5xl flex-1 px-4
+         + py-6 sm:px-6 sm:py-8">                                        
+      50 +            {children}                                         
+      51 +          </main>                                              
+      52 +          <footer className="border-t border-slate-200 bg-white
+         +">                                                             
+      53 +            <div className="mx-auto max-w-5xl px-4 py-4 text-xs
+         + text-slate-500 sm:px-6">                                      
+      54 +              Create a knowledge base → Upload a PDF → Wait for
+         + ingestion → Ask a                                             
+      55 +              question → Read the answer and inspect its source
+         +s.                                                             
+      56 +            </div>                                             
+      57 +          </footer>                                            
+      58 +        </Providers>                                           
+      59 +      </body>                                                  
+      60      </html>
+      61    );
+      62  }
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/app/page.tsx)
+  ⎿  Added 3 lines, removed 67 lines
+       1 -import Image from "next/image";                                
+       1 +import { redirect } from "next/navigation";                    
+       2  
+       3 -export default function Home() {                               
+       4 -  return (                                                     
+       5 -    <div className="flex flex-col flex-1 items-center justify-c
+         -enter bg-zinc-50 font-sans dark:bg-black">                     
+       6 -      <main className="flex flex-1 w-full max-w-3xl flex-col it
+         -ems-center justify-between py-32 px-16 bg-white dark:bg-black s
+         -m:items-start">                                                
+       7 -        <Image                                                 
+       8 -          className="dark:invert h-5 w-[100px]"                
+       9 -          src="/next.svg"                                      
+      10 -          alt="Next.js logo"                                   
+      11 -          width={100}                                          
+      12 -          height={20}                                          
+      13 -          priority                                             
+      14 -        />                                                     
+      15 -        <div className="flex flex-col items-center gap-6 text-c
+         -enter sm:items-start sm:text-left">                            
+      16 -          <h1 className="max-w-xs text-3xl font-semibold leadin
+         -g-10 tracking-tight text-black dark:text-zinc-50">             
+      17 -            To get started, edit the{" "}                      
+      18 -            <code className="rounded bg-black/[.06] px-1.5 py-0
+         -.5 font-mono text-[0.9em] dark:bg-white/[.08]">                
+      19 -              page.tsx                                         
+      20 -            </code>{" "}                                       
+      21 -            file.                                              
+      22 -          </h1>                                                
+      23 -          <p className="max-w-md text-lg leading-8 text-zinc-60
+         -0 dark:text-zinc-400">                                         
+      24 -            Looking for a starting point or more instructions? 
+         -Head over to{" "}                                              
+      25 -            <a                                                 
+      26 -              href="https://vercel.com/templates?framework=next
+         -.js&utm_source=create-next-app&utm_medium=appdir-template-tw&ut
+         -m_campaign=create-next-app"                                    
+      27 -              className="font-medium text-zinc-950 dark:text-zi
+         -nc-50"                                                         
+      28 -            >                                                  
+      29 -              Templates                                        
+      30 -            </a>{" "}                                          
+      31 -            or the{" "}                                        
+      32 -            <a                                                 
+      33 -              href="https://nextjs.org/learn?utm_source=create-
+         -next-app&utm_medium=appdir-template-tw&utm_campaign=create-next
+         --app"                                                          
+      34 -              className="font-medium text-zinc-950 dark:text-zi
+         -nc-50"                                                         
+      35 -            >                                                  
+      36 -              Learning                                         
+      37 -            </a>{" "}                                          
+      38 -            center.                                            
+      39 -          </p>                                                 
+      40 -        </div>                                                 
+      41 -        <div className="flex flex-col gap-4 text-base font-medi
+         -um sm:flex-row">                                               
+      42 -          <a                                                   
+      43 -            className="flex h-12 w-full items-center justify-ce
+         -nter gap-2 rounded-full bg-foreground px-5 text-background tran
+         -sition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158
+         -px]"                                                           
+      44 -            href="https://vercel.com/new?utm_source=create-next
+         --app&utm_medium=appdir-template-tw&utm_campaign=create-next-app
+         -"                                                              
+      45 -            target="_blank"                                    
+      46 -            rel="noopener noreferrer"                          
+      47 -          >                                                    
+      48 -            <Image                                             
+      49 -              className="dark:invert h-[14px] w-4"             
+      50 -              src="/vercel.svg"                                
+      51 -              alt="Vercel logomark"                            
+      52 -              width={16}                                       
+      53 -              height={14}                                      
+      54 -            />                                                 
+      55 -            Deploy Now                                         
+      56 -          </a>                                                 
+      57 -          <a                                                   
+      58 -            className="flex h-12 w-full items-center justify-ce
+         -nter rounded-full border border-solid border-black/[.08] px-5 t
+         -ransition-colors hover:border-transparent hover:bg-black/[.04] 
+         -dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]" 
+      59 -            href="https://nextjs.org/docs?utm_source=create-nex
+         -t-app&utm_medium=appdir-template-tw&utm_campaign=create-next-ap
+         -p"                                                             
+      60 -            target="_blank"                                    
+      61 -            rel="noopener noreferrer"                          
+      62 -          >                                                    
+      63 -            Documentation                                      
+      64 -          </a>                                                 
+      65 -        </div>                                                 
+      66 -      </main>                                                  
+      67 -    </div>                                                     
+      68 -  );                                                           
+       3 +export default function HomePage() {                           
+       4 +  redirect("/knowledge-bases");                                
+       5  }
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/knowledge-b
+       ases/create-kb-dialog.tsx)
+  ⎿  Wrote 120 lines to ../../reg-generator-frontend/components/knowledge-b
+     ases/create-kb-dialog.tsx
+       1 "use client";
+       2 
+       3 import { useEffect } from "react";
+       5 import { zodResolver } from "@hookform/resolvers/zod";
+       6 import { Modal } from "@/components/ui/modal";
+       7 import { Button } from "@/components/ui/button";
+       8 import { TextField, TextAreaField } from "@/components/ui/field"
+       9 import { ApiErrorMessage } from "@/components/errors/api-error-m
+         essage";
+      10 import { useToast } from "@/components/ui/toast";
+     … +118 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/lib/utils/form-errors.
+       ts)
+  ⎿  Wrote 21 lines to
+     ../../reg-generator-frontend/lib/utils/form-errors.ts
+       1 import type { FieldValues, Path, UseFormSetError } from "react-h
+         ook-form";
+       3 
+       4 /**
+       5  * Map a normalized {@link ApiError}'s `fieldErrors` onto a Reac
+       6  * Unknown field names are ignored (the caller still shows the t
+         op-level error).
+       7  */
+       9   error: ApiError,
+      10   setError: UseFormSetError<T>,
+     … +16 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/knowledge-b
+       ases/kb-card.tsx)
+  ⎿  Wrote 61 lines to
+     ../../reg-generator-frontend/components/knowledge-bases/kb-card.tsx
+       1 "use client";
+       2 
+       3 import Link from "next/link";
+       4 import { Card } from "@/components/ui/card";
+       5 import { Button } from "@/components/ui/button";
+       6 import { formatRelative } from "@/lib/utils/format";
+       7 import type { KnowledgeBase } from "@/lib/types/api";
+       8 
+       9 interface Props {
+      10   kb: KnowledgeBase;
+     … +61 lines (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/button.
+        tsx)
+  ⎿  Added 12 lines
+      27    md: "h-10 px-4 text-sm gap-2",
+      28  };
+      29  
+      30 +const BASE =                                                   
+      31 +  "inline-flex items-center justify-center rounded-md font-medi
+         +um transition-colors focus-visible:outline focus-visible:outlin
+         +e-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed"
+         +;                                                              
+      32 +                                                               
+      33 +/** Class string for rendering a link (`<Link>`/`<a>`) that loo
+         +ks like a Button. */                                           
+      34 +export function buttonClasses(                                 
+      35 +  variant: Variant = "primary",                                
+      36 +  size: Size = "md",                                           
+      37 +  className?: string,                                          
+      38 +): string {                                                    
+      39 +  return cn(BASE, VARIANT[variant], SIZE[size], className);    
+      40 +}                                                              
+      41 +                                                               
+      42  export const Button = forwardRef<HTMLButtonElement, ButtonProps
+          >(function Button(
+      43    { variant = "primary", size = "md", loading = false, classNam
+          e, children, disabled, type, ...rest },
+      44    ref,
+
+  Read 1 file (ctrl+o to expand)
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/button.t
+       sx)
+  ⎿  Added 6 lines, removed 13 lines
+      13  
+      14  const VARIANT: Record<Variant, string> = {
+      15    primary:
+      16 -    "bg-slate-900 text-white hover:bg-slate-800 focus-visible:o
+         -utline-slate-900 disabled:bg-slate-400",                       
+      16 +    "bg-slate-900 text-white hover:bg-slate-800 outline-slate-9
+         +00 disabled:bg-slate-400",                                     
+      17    secondary:
+      18 -    "bg-white text-slate-800 border border-slate-300 hover:bg-s
+         -late-50 focus-visible:outline-slate-900 disabled:opacity-50",  
+      18 +    "bg-white text-slate-800 border border-slate-300 hover:bg-s
+         +late-50 outline-slate-900 disabled:opacity-50",                
+      19    danger:
+      20 -    "bg-red-600 text-white hover:bg-red-500 focus-visible:outli
+         -ne-red-600 disabled:bg-red-300",                               
+      20 +    "bg-red-600 text-white hover:bg-red-500 outline-red-600 dis
+         +abled:bg-red-300",                                             
+      21    ghost:
+      22 -    "bg-transparent text-slate-700 hover:bg-slate-100 focus-vis
+         -ible:outline-slate-900 disabled:opacity-50",                   
+      22 +    "bg-transparent text-slate-700 hover:bg-slate-100 outline-s
+         +late-900 disabled:opacity-50",                                 
+      23  };
+      24  
+      25  const SIZE: Record<Size, string> = {
+     ...
+      28  };
+      29  
+      30  const BASE =
+      31 -  "inline-flex items-center justify-center rounded-md font-medi
+         -um transition-colors focus-visible:outline focus-visible:outlin
+         -e-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed"
+         -;                                                              
+      31 +  "inline-flex items-center justify-center rounded-md font-medi
+         +um transition-colors focus-visible:outline-2 focus-visible:outl
+         +ine-offset-2 disabled:cursor-not-allowed";                     
+      32  
+      33  /** Class string for rendering a link (`<Link>`/`<a>`) that loo
+          ks like a Button. */
+      34  export function buttonClasses(
+     ...
+      49        type={type ?? "button"}
+      50        disabled={disabled || loading}
+      51        aria-busy={loading || undefined}
+      52 -      className={cn(                                           
+      53 -        "inline-flex items-center justify-center rounded-md fon
+         -t-medium transition-colors",                                   
+      54 -        "focus-visible:outline focus-visible:outline-2 focus-vi
+         -sible:outline-offset-2",                                       
+      55 -        "disabled:cursor-not-allowed",                         
+      56 -        VARIANT[variant],                                      
+      57 -        SIZE[size],                                            
+      58 -        className,                                             
+      59 -      )}                                                       
+      52 +      className={cn(BASE, VARIANT[variant], SIZE[size], classNa
+         +me)}                                                           
+      53        {...rest}
+      54      >
+      55        {loading && <Spinner className="h-4 w-4" />}
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/knowledge-
+        bases/kb-card.tsx)
+  ⎿  Added 1 line, removed 1 line
+      2  
+      3  import Link from "next/link";
+      4  import { Card } from "@/components/ui/card";
+      5 -import { Button } from "@/components/ui/button";                
+      5 +import { Button, buttonClasses } from "@/components/ui/button"; 
+      6  import { formatRelative } from "@/lib/utils/format";
+      7  import type { KnowledgeBase } from "@/lib/types/api";
+      8  
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/knowledge-
+        bases/kb-card.tsx)
+  ⎿  Added 1 line, removed 1 line
+      19          <h3 className="text-base font-semibold text-slate-900">
+      20            <Link
+      21              href={`/knowledge-bases/${kb.id}`}
+      22 -            className="rounded hover:underline focus-visible:ou
+         -tline focus-visible:outline-2 focus-visible:outline-offset-2 fo
+         -cus-visible:outline-slate-900"                                 
+      22 +            className="rounded hover:underline focus-visible:ou
+         +tline-2 focus-visible:outline-offset-2 focus-visible:outline-sl
+         +ate-900"                                                       
+      23            >
+      24              {kb.name}
+      25            </Link>
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/knowledge-
+        bases/kb-card.tsx)
+  ⎿  Error editing file
+
+  Read 1 file (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/knowledge-
+        bases/kb-card.tsx)
+  ⎿  Added 5 lines, removed 2 lines
+      43          </dl>
+      44        </div>
+      45        <div className="flex items-center gap-2 border-t border-s
+          late-100 p-4">
+      46 -        <Button size="sm" variant="secondary" asChildHref={`/kn
+         -owledge-bases/${kb.id}`}>                                      
+      46 +        <Link                                                  
+      47 +          href={`/knowledge-bases/${kb.id}`}                   
+      48 +          className={buttonClasses("secondary", "sm")}         
+      49 +        >                                                      
+      50            Open
+      48 -        </Button>                                              
+      51 +        </Link>                                                
+      52          <Button
+      53            size="sm"
+      54            variant="ghost"
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/app/layout.tsx)
+  ⎿  Added 1 line, removed 1 line
+      34              <div className="mx-auto flex max-w-5xl items-center
+           justify-between px-4 py-3 sm:px-6">
+      35                <Link
+      36                  href="/knowledge-bases"
+      37 -                className="flex items-center gap-2 rounded font
+         --semibold text-slate-900 focus-visible:outline focus-visible:ou
+         -tline-2 focus-visible:outline-offset-2 focus-visible:outline-sl
+         -ate-900"                                                       
+      37 +                className="flex items-center gap-2 rounded font
+         +-semibold text-slate-900 focus-visible:outline-2 focus-visible:
+         +outline-offset-2 focus-visible:outline-slate-900"              
+      38                >
+      39                  <span
+      40                    aria-hidden
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/ui/field.t
+        sx)
+  ⎿  Added 1 line, removed 1 line
+      32  }
+      33  
+      34  const baseControl =
+      35 -  "block w-full rounded-md border bg-white px-3 py-2 text-sm te
+         -xt-slate-900 shadow-sm placeholder:text-slate-400 focus:outline
+         - focus:outline-2 focus:outline-offset-0 focus:outline-slate-900
+         - disabled:cursor-not-allowed disabled:bg-slate-50";            
+      35 +  "block w-full rounded-md border bg-white px-3 py-2 text-sm te
+         +xt-slate-900 shadow-sm placeholder:text-slate-400 focus:outline
+         +-2 focus:outline-offset-0 focus:outline-slate-900 disabled:curs
+         +or-not-allowed disabled:bg-slate-50";                          
+      36  
+      37  export interface TextFieldProps extends InputHTMLAttributes<HTM
+          LInputElement> {
+      38    label: string;
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/app/knowledge-bases/pa
+       ge.tsx)
+  ⎿  Wrote 136 lines to
+     ../../reg-generator-frontend/app/knowledge-bases/page.tsx
+       1 "use client";
+       2 
+       3 import { useState } from "react";
+       4 import { useRouter } from "next/navigation";
+       5 import { Button } from "@/components/ui/button";
+       7 import { EmptyState } from "@/components/ui/empty-state";
+       8 import { Pagination } from "@/components/ui/pagination";
+       9 import { ApiErrorMessage } from "@/components/errors/api-error-m
+         essage";
+      10 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+     … +141 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/documents/d
+       ocument-upload.tsx)
+  ⎿  Wrote 173 lines to
+     ../../reg-generator-frontend/components/documents/document-upload.tsx
+       1 "use client";
+       2 
+       3 import { useRef, useState, type DragEvent } from "react";
+       4 import { Button } from "@/components/ui/button";
+       5 import { InlineError } from "@/components/errors/inline-error";
+         essage";
+       7 import { useToast } from "@/components/ui/toast";
+       8 import { useUploadDocument } from "@/lib/hooks/use-documents";
+       9 import { validatePdfFile } from "@/lib/validation/schemas";
+      10 import { config } from "@/lib/config";
+     … +181 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/documents/d
+       ocument-row.tsx)
+  ⎿  Wrote 112 lines to
+     ../../reg-generator-frontend/components/documents/document-row.tsx
+       1 "use client";
+       2 
+       4 import { Button } from "@/components/ui/button";
+       5 import { DocumentStatusBadge } from "@/components/documents/docu
+         ment-status-badge";
+         essage";
+       7 import { useToast } from "@/components/ui/toast";
+       8 import { useReingestDocument } from "@/lib/hooks/use-documents";
+         s/format";
+      10 import type { DocumentDto } from "@/lib/types/api";
+     … +121 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/documents/d
+       ocuments-section.tsx)
+  ⎿  Wrote 134 lines to ../../reg-generator-frontend/components/documents/d
+     ocuments-section.tsx
+       1 "use client";
+       2 
+       4 import { DocumentUpload } from "@/components/documents/document-
+         upload";
+       5 import { DocumentRow } from "@/components/documents/document-row
+       6 import { Pagination } from "@/components/ui/pagination";
+       7 import { EmptyState } from "@/components/ui/empty-state";
+       8 import { Skeleton } from "@/components/ui/skeleton";
+      10 import { ApiErrorMessage } from "@/components/errors/api-error-m
+         essage";
+     … +138 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/rag/source-
+       card.tsx)
+  ⎿  Wrote 41 lines to
+     ../../reg-generator-frontend/components/rag/source-card.tsx
+       1 import { formatScore, shortId } from "@/lib/utils/format";
+       3 
+       4 export function SourceCard({ source, index }: { source: RagSourc
+       5   return (
+       6     <li className="rounded-lg border border-slate-200 bg-white p
+       7       <div className="flex flex-wrap items-center gap-x-3 gap-y-
+         1 text-xs text-slate-500">
+         r rounded-full bg-slate-900 text-[11px] font-semibold text-white
+         ">
+      10         </span>
+     … +39 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/rag/answer-
+       display.tsx)
+  ⎿  Wrote 67 lines to
+     ../../reg-generator-frontend/components/rag/answer-display.tsx
+       1 import { SourceCard } from "@/components/rag/source-card";
+       2 import { Card } from "@/components/ui/card";
+       3 import type { RagQueryResponse } from "@/lib/types/api";
+       4 
+       5 export function AnswerDisplay({ result }: { result: RagQueryResp
+       6   const sources = result.sources ?? [];
+       7 
+       8   return (
+       9     <div className="space-y-4">
+      10       <Card className="p-5">
+     … +67 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/rag/ask-que
+       stions.tsx)  ⎿  Wrote 152 lines to
+     ../../reg-generator-frontend/components/rag/ask-questions.tsx
+       1 "use client";
+       2 
+       3 import { useState } from "react";
+       5 import { zodResolver } from "@hookform/resolvers/zod";
+       6 import { Button } from "@/components/ui/button";
+       7 import { TextField, TextAreaField } from "@/components/ui/field"
+         ;
+         essage";
+       9 import { EmptyState } from "@/components/ui/empty-state";
+      10 import { Card } from "@/components/ui/card";
+     … +156 lines (ctrl+o to expand)
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/app/knowledge-bases/[i
+       d]/page.tsx)
+  ⎿  Wrote 118 lines to
+     ../../reg-generator-frontend/app/knowledge-bases/[id]/page.tsx
+       1 "use client";
+       2 
+       4 import Link from "next/link";
+       5 import { useParams } from "next/navigation";
+       6 import { Skeleton } from "@/components/ui/skeleton";
+         essage";
+       8 import { DocumentsSection } from "@/components/documents/documen
+         ts-section";
+      10 import { useKnowledgeBase } from "@/lib/hooks/use-knowledge-base
+         s";
+     … +118 lines (ctrl+o to expand)
+
+  Searched for 1 pattern, read 1 file, ran 1 shell command (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/rag/source
+        -card.tsx)
+  ⎿  Added 1 line, removed 1 line
+      32  }) {
+      33    return (
+      34      <span className="inline-flex items-center gap-1" title={tit
+          le}>
+      35 -      <span class[REDACTED:generic-api-key] tracking-wide text-
+         -slate-400">                                                    
+      35 +      <span className="uppercase tracking-wide text-slate-400 t
+         +ext-[0.625rem]">                                               
+      36          {label}
+      37        </span>
+      38        <span className="font-medium text-slate-700">{value}</spa
+          n>
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/lib/validation/schema
+        s.ts)
+  ⎿  Added 41 lines, removed 8 lines
+      32  
+      33  const MAX_QUESTION = 4000;
+      34  
+      35 +/**                                                            
+      36 + * Advanced-option field: the form always holds a string. An em
+         +pty string means                                               
+      37 + * "not set" and becomes `undefined`; anything else is parsed a
+         +nd range-checked.                                              
+      38 + */                                                            
+      39 +function optionalNumberField(opts: {                           
+      40 +  min: number;                                                 
+      41 +  max: number;                                                 
+      42 +  integer?: boolean;                                           
+      43 +  label: string;                                               
+      44 +}) {                                                           
+      45 +  return z                                                     
+      46 +    .string()                                                  
+      47 +    .trim()                                                    
+      48 +    .transform((v, ctx) => {                                   
+      49 +      if (v === "") return undefined;                          
+      50 +      const n = Number(v);                                     
+      51 +      if (!Number.isFinite(n)) {                               
+      52 +        ctx.addIssue({ code: "custom", message: `${opts.label} 
+         +must be a number.` });                                         
+      53 +        return z.NEVER;                                        
+      54 +      }                                                        
+      55 +      if (opts.integer && !Number.isInteger(n)) {              
+      56 +        ctx.addIssue({ code: "custom", message: `${opts.label} 
+         +must be a whole number.` });                                   
+      57 +        return z.NEVER;                                        
+      58 +      }                                                        
+      59 +      if (n < opts.min || n > opts.max) {                      
+      60 +        ctx.addIssue({                                         
+      61 +          code: "custom",                                      
+      62 +          message: `${opts.label} must be between ${opts.min} a
+         +nd ${opts.max}.`,                                              
+      63 +        });                                                    
+      64 +        return z.NEVER;                                        
+      65 +      }                                                        
+      66 +      return n;                                                
+      67 +    });                                                        
+      68 +}                                                              
+      69 +                                                               
+      70  export const ragQuerySchema = z.object({
+      71    question: z
+      72      .string()
+      73      .trim()
+      74      .min(1, "Enter a question.")
+      75      .max(MAX_QUESTION, `Question must be at most ${MAX_QUESTION
+          } characters.`),
+      41 -  // Advanced options — kept as strings in the form, coerced/va
+         -lidated here.                                                  
+      42 -  topK: z                                                      
+      43 -    .union([z.literal(""), z.coerce.number().int("topK must be 
+         -a whole number.").min(0, "topK must be at least 0.").max(50, "t
+         -opK must be at most 50.")])                                    
+      44 -    .optional(),                                               
+      45 -  minScore: z                                                  
+      46 -    .union([z.literal(""), z.coerce.number().min(0, "minScore m
+         -ust be at least 0.").max(1, "minScore must be at most 1.")])   
+      47 -    .optional(),                                               
+      76 +  topK: optionalNumberField({ min: 0, max: 50, integer: true, l
+         +abel: "topK" }),                                               
+      77 +  minScore: optionalNumberField({ min: 0, max: 1, label: "minSc
+         +ore" }),                                                       
+      78  });
+      79  
+      50 -export type RagQueryValues = z.infer<typeof ragQuerySchema>;   
+      80 +/** Shape the form holds (all advanced fields are strings). */ 
+      81 +export type RagQueryFormValues = z.input<typeof ragQuerySchema>
+         +;                                                              
+      82 +/** Shape after validation/transform (numbers or undefined). */
+      83 +export type RagQueryValues = z.output<typeof ragQuerySchema>;  
+      84  
+      85  export const QUESTION_MAX_LENGTH = MAX_QUESTION;
+      86  
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/components/rag/ask-que
+       stions.tsx)
+  ⎿  Added 11 lines, removed 11 lines
+      14  import {
+      15    ragQuerySchema,
+      16    QUESTION_MAX_LENGTH,
+      17 +  type RagQueryFormValues,                                     
+      18    type RagQueryValues,
+      19  } from "@/lib/validation/schemas";
+      20  import type { RagQueryRequest } from "@/lib/types/api";
+      21  
+      22  export function AskQuestions({ knowledgeBaseId }: { knowledgeBa
+          seId: string }) {
+      23    const [showAdvanced, setShowAdvanced] = useState(false);
+      24 +  const [lastRequest, setLastRequest] = useState<RagQueryReques
+         +t | null>(null);                                               
+      25    const mutation = useQueryKnowledgeBase(knowledgeBaseId);
+      26  
+      27    const {
+     ...
+      29      handleSubmit,
+      30      watch,
+      31      formState: { errors },
+      30 -  } = useForm<RagQueryValues>({                                
+      32 +  } = useForm<RagQueryFormValues, unknown, RagQueryValues>({   
+      33      resolver: zodResolver(ragQuerySchema),
+      34      defaultValues: { question: "", topK: "", minScore: "" },
+      35    });
+     ...
+      38  
+      39    function toRequest(values: RagQueryValues): RagQueryRequest {
+      40      const body: RagQueryRequest = { question: values.question.t
+          rim() };
+      39 -    if (typeof values.topK === "number" && !Number.isNaN(values
+         -.topK)) {                                                      
+      40 -      body.topK = values.topK;                                 
+      41 -    }                                                          
+      42 -    if (typeof values.minScore === "number" && !Number.isNaN(va
+         -lues.minScore)) {                                              
+      43 -      body.minScore = values.minScore;                         
+      44 -    }                                                          
+      41 +    if (typeof values.topK === "number") body.topK = values.top
+         +K;                                                             
+      42 +    if (typeof values.minScore === "number") body.minScore = va
+         +lues.minScore;                                                 
+      43      return body;
+      44    }
+      45  
+      46    const submit = handleSubmit((values) => {
+      49 -    mutation.mutate(toRequest(values));                        
+      47 +    const request = toRequest(values);                         
+      48 +    setLastRequest(request);                                   
+      49 +    mutation.mutate(request);                                  
+      50    });
+      51  
+      52 -  const lastValues = watch();                                  
+      53 -                                                               
+      52    return (
+      53      <div className="space-y-5">
+      54        <form onSubmit={submit} className="space-y-4" noValidate>
+     ...
+      121          <ApiErrorMessage
+      122            error={mutation.error}
+      123            title="Unable to generate an answer"
+      126 -          onRetry={() => mutation.mutate(toRequest(lastValues)
+          -)}                                                            
+      124 +          onRetry={                                           
+      125 +            lastRequest ? () => mutation.mutate(lastRequest) :
+          + undefined                                                    
+      126 +          }                                                   
+      127            retrying={mutation.isPending}
+      128          />
+      129        )}
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/knowledge-
+        bases/create-kb-dialog.tsx)
+  ⎿  Added 1 line, removed 1 line
+      1  "use client";
+      2  
+      3  import { useEffect } from "react";
+      4 -import { useForm } from "react-hook-form";                      
+      4 +import { useForm, useWatch } from "react-hook-form";            
+      5  import { zodResolver } from "@hookform/resolvers/zod";
+      6  import { Modal } from "@/components/ui/modal";
+      7  import { Button } from "@/components/ui/button";
+
+  Read 1 file (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/knowledge-
+        bases/create-kb-dialog.tsx)
+  ⎿  Added 1 line, removed 1 line
+      31      handleSubmit,
+      32      reset,
+      33      setError,
+      34 -    watch,                                                     
+      34 +    control,                                                   
+      35      formState: { errors },
+      36    } = useForm<CreateKnowledgeBaseValues>({
+      37      resolver: zodResolver(createKnowledgeBaseSchema),
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/knowledge-
+        bases/create-kb-dialog.tsx)
+  ⎿  Added 1 line, removed 1 line
+      46      // eslint-disable-next-line react-hooks/exhaustive-deps
+      47    }, [open]);
+      48  
+      49 -  const descriptionValue = watch("description") ?? "";         
+      49 +  const descriptionValue = useWatch({ control, name: "descripti
+         +on" }) ?? "";                                                  
+      50  
+      51    const onSubmit = handleSubmit((values) => {
+      52      mutation.mutate(
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/rag/ask-qu
+        estions.tsx)
+  ⎿  Added 1 line, removed 1 line
+      1  "use client";
+      2  
+      3  import { useState } from "react";
+      4 -import { useForm } from "react-hook-form";                      
+      4 +import { useForm, useWatch } from "react-hook-form";            
+      5  import { zodResolver } from "@hookform/resolvers/zod";
+      6  import { Button } from "@/components/ui/button";
+      7  import { TextField, TextAreaField } from "@/components/ui/field"
+         ;
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/components/rag/ask-qu
+        estions.tsx)
+  ⎿  Added 2 lines, removed 2 lines
+      27    const {
+      28      register,
+      29      handleSubmit,
+      30 -    watch,                                                     
+      30 +    control,                                                   
+      31      formState: { errors },
+      32    } = useForm<RagQueryFormValues, unknown, RagQueryValues>({
+      33      resolver: zodResolver(ragQuerySchema),
+      34      defaultValues: { question: "", topK: "", minScore: "" },
+      35    });
+      36  
+      37 -  const question = watch("question") ?? "";                    
+      37 +  const question = useWatch({ control, name: "question" }) ?? "
+         +";                                                             
+      38  
+      39    function toRequest(values: RagQueryValues): RagQueryRequest {
+      40      const body: RagQueryRequest = { question: values.question.t
+          rim() };
+
+  Searched for 1 pattern, ran 11 shell commands (ctrl+o to expand)
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/README.md)
+  ⎿  Added 84 lines, removed 21 lines
+       1 -This is a [Next.js](https://nextjs.org) project bootstrapped wi
+         -th [`create-next-app`](https://nextjs.org/docs/app/api-referenc
+         -e/cli/create-next-app).                                        
+       1 +# RAG Generator — Frontend                                     
+       2  
+       3 -## Getting Started                                             
+       3 +Next.js 16 (App Router) frontend for the RAG Generator backend.
+         + Create a                                                      
+       4 +knowledge base, upload PDFs, watch ingestion progress, then ask
+         + questions and                                                 
+       5 +read grounded answers with their supporting sources.           
+       6  
+       5 -First, run the development server:                             
+       7 +## Stack                                                       
+       8  
+       9 +- **Next.js 16** + **TypeScript** (App Router)                 
+      10 +- **Tailwind CSS v4**                                          
+      11 +- **Axios** — the only HTTP client; centralized in `lib/api/cli
+         +ent.ts`                                                        
+      12 +- **TanStack React Query** — server-state: caching, loading/err
+         +or, polling,                                                   
+      13 +  mutations, cache invalidation                                
+      14 +- **React Hook Form** + **Zod** — forms and validation         
+      15 +                                                               
+      16 +No Redux, no auth middleware, no extra state libraries.        
+      17 +                                                               
+      18 +## Getting started                                             
+      19 +                                                               
+      20  ```bash
+       8 -npm run dev                                                    
+       9 -# or                                                           
+      10 -yarn dev                                                       
+      11 -# or                                                           
+      12 -pnpm dev                                                       
+      13 -# or                                                           
+      14 -bun dev                                                        
+      21 +cp .env.example .env.local   # then edit if your backend is els
+         +ewhere                                                         
+      22 +npm install                                                    
+      23 +npm run dev                  # http://localhost:3000           
+      24  ```
+      25  
+      17 -Open [http://localhost:3000](http://localhost:3000) with your b
+         -rowser to see the result.                                      
+      26 +### Environment                                                
+      27  
+      19 -You can start editing the page by modifying `app/page.tsx`. The
+         - page auto-updates as you edit the file.                       
+      28 +| Variable | Purpose | Default |                               
+      29 +| --- | --- | --- |                                            
+      30 +| `NEXT_PUBLIC_API_URL` | Base URL of the Spring Boot backend (
+         +no trailing slash) | `http://localhost:8080` |                 
+      31 +| `NEXT_PUBLIC_MAX_UPLOAD_MB` | Frontend PDF size guard (backen
+         +d stays authoritative) | `25` |                                
+      32  
+      21 -This project uses [`next/font`](https://nextjs.org/docs/app/bui
+         -lding-your-application/optimizing/fonts) to automatically optim
+         -ize and load [Geist](https://vercel.com/font), a new font famil
+         -y for Vercel.                                                  
+      33 +## Routes                                                      
+      34  
+      23 -## Learn More                                                  
+      35 +| Path | Purpose |                                             
+      36 +| --- | --- |                                                  
+      37 +| `/` | Redirects to `/knowledge-bases` |                      
+      38 +| `/knowledge-bases` | Paginated list; create / open / delete |
+      39 +| `/knowledge-bases/[id]` | Two tabs: **Documents** (upload, st
+         +atus polling, re-ingest, delete) and **Ask questions** (query +
+         + grounded answer + sources) |                                  
+      40  
+      25 -To learn more about Next.js, take a look at the following resou
+         -rces:                                                          
+      41 +## Architecture                                                
+      42  
+      27 -- [Next.js Documentation](https://nextjs.org/docs) - learn abou
+         -t Next.js features and API.                                    
+      28 -- [Learn Next.js](https://nextjs.org/learn) - an interactive Ne
+         -xt.js tutorial.                                                
+      43 +```                                                            
+      44 +lib/                                                           
+      45 +  config.ts                 env + constants                    
+      46 +  types/api.ts              all backend models (aligned with th
+         +e OpenAPI schemas)                                             
+      47 +  api/                                                         
+      48 +    client.ts               Axios instance + response intercept
+         +or                                                             
+      49 +    errors.ts               normalize any failure -> { status, 
+         +code, message, fieldErrors }                                   
+      50 +    pagination.ts           normalize the page envelope        
+      51 +    knowledge-base-api.ts   POST/GET/GET{id}/DELETE  /api/v1/kn
+         +owledge-bases                                                  
+      52 +    document-api.ts          upload/list/get/delete/re-ingest d
+         +ocuments                                                       
+      53 +    rag-api.ts               POST /api/v1/knowledge-bases/{id}/
+         +query                                                          
+      54 +  validation/schemas.ts     Zod schemas + PDF client-side valid
+         +ation                                                          
+      55 +  hooks/                     React Query hooks (one file per do
+         +main)                                                          
+      56 +components/                                                    
+      57 +  ui/                        Button, Card, Modal, ConfirmDialog
+         +, Toast, Skeleton, Pagination, EmptyState, …                   
+      58 +  errors/                    ApiErrorMessage, FieldError, Inlin
+         +eError                                                         
+      59 +  knowledge-bases/  documents/  rag/     feature components    
+      60 +```                                                            
+      61  
+      30 -You can check out [the Next.js GitHub repository](https://githu
+         -b.com/vercel/next.js) - your feedback and contributions are wel
+         -come!                                                          
+      62 +### Backend endpoints used (exhaustive — nothing else is called
+         +)                                                              
+      63  
+      32 -## Deploy on Vercel                                            
+      64 +| Method | Path |                                              
+      65 +| --- | --- |                                                  
+      66 +| POST | `/api/v1/knowledge-bases` |                           
+      67 +| GET | `/api/v1/knowledge-bases?page&size&sort` |             
+      68 +| GET | `/api/v1/knowledge-bases/{id}` |                       
+      69 +| DELETE | `/api/v1/knowledge-bases/{id}` |                    
+      70 +| POST | `/api/v1/knowledge-bases/{knowledgeBaseId}/documents` 
+         +(multipart, field `file`) |                                    
+      71 +| GET | `/api/v1/knowledge-bases/{knowledgeBaseId}/documents?pa
+         +ge&size&sort` |                                                
+      72 +| GET | `/api/v1/documents/{documentId}` |                     
+      73 +| DELETE | `/api/v1/documents/{documentId}` |                  
+      74 +| POST | `/api/v1/documents/{documentId}/ingest` (retry failed 
+         +ingestion) |                                                   
+      75 +| POST | `/api/v1/knowledge-bases/{knowledgeBaseId}/query` |   
+      76  
+      34 -The easiest way to deploy your Next.js app is to use the [Verce
+         -l Platform](https://vercel.com/new?utm_medium=default-template&
+         -filter=next.js&utm_source=create-next-app&utm_campaign=create-n
+         -ext-app-readme) from the creators of Next.js.                  
+      77 +### Ingestion polling                                          
+      78  
+      36 -Check out our [Next.js deployment documentation](https://nextjs
+         -.org/docs/app/building-your-application/deploying) for more det
+         -ails.                                                          
+      79 +While any document is `PENDING`, `PROCESSING`, or `EMBEDDING`, 
+         +the existing                                                   
+      80 +document-list query is refetched every 3s (`refetchInterval`). 
+         +Polling stops                                                  
+      81 +automatically once everything is `COMPLETED` or `FAILED`. No de
+         +dicated status                                                 
+      82 +endpoint is used.                                              
+      83 +                                                               
+      84 +### Error handling                                             
+      85 +                                                               
+      86 +Every request passes through one Axios interceptor that convert
+         +s failures into a                                              
+      87 +consistent `ApiError` (`status`, `code`, `message`, `fieldError
+         +s`). Java/Spring                                               
+      88 +stack traces are stripped. `400/404/409/413/415/422/429/500/502
+         +/503/504` and                                                  
+      89 +network errors each get a clear, user-facing message and a retr
+         +y affordance                                                   
+      90 +where it makes sense. Failed deletes keep the item visible; fai
+         +led uploads keep                                               
+      91 +the upload UI; failed queries keep the question and advanced op
+         +tions intact.                                                  
+      92 +                                                               
+      93 +## Scripts                                                     
+      94 +                                                               
+      95 +```bash                                                        
+      96 +npm run dev      # dev server                                  
+      97 +npm run build    # production build (also type-checks)         
+      98 +npm run lint     # eslint                                      
+      99 +```                                                            
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/lib/api/document-api.
+        ts)
+  ⎿  Added 2 lines, removed 1 line
+      33    ): Promise<DocumentDto> {
+      34      const form = new FormData();
+      35      form.append("file", file);
+      36 +    // Let Axios/the browser set `Content-Type: multipart/form-
+         +data` with the                                                 
+      37 +    // correct boundary — setting it by hand omits the boundary
+         + and breaks parsing.                                           
+      38      return apiClient
+      39        .post<DocumentDto>(
+      40          `/api/v1/knowledge-bases/${knowledgeBaseId}/documents`,
+      41          form,
+      42          {
+      41 -          headers: { "Content-Type": "multipart/form-data" },  
+      43            onUploadProgress: (e) => {
+      44              if (onProgress && e.total) {
+      45                onProgress(Math.round((e.loaded / e.total) * 100)
+          );
+
+  Read 1 file, ran 2 shell commands (ctrl+o to expand)
+
+● Write(~/.claude/projects/-home-thakshara-Documents-Projects-Othor-reg-generato
+       r-frontend/memory/backend-dev-server.md)
+  ⎿  Wrote 22 lines to
+     ../../../../../.claude/projects/-home-thakshara-Documents-Projects-Oth
+     or-reg-generator-frontend/memory/backend-dev-server.md
+      1 ---
+      2 name: backend-dev-server
+      3 description: Where the RAG Generator backend runs during local de
+        velopment and its response shapes
+      4 metadata: 
+      5   node_type: memory
+      6   type: project
+      7   originSessionId: 85c96e44-7b41-4a7a-ba0d-cf1d9c1b0068
+      8   modified: 2026-08-30T06:10:56.722Z
+      9 ---
+     … +23 lines (ctrl+o to expand)
+
+● Write(~/.claude/projects/-home-thakshara-Documents-Projects-Othor-reg-generato
+       r-frontend/memory/MEMORY.md)
+  ⎿  Wrote 1 line to ../../../../../.claude/projects/-home-thakshara-Docume
+     nts-Projects-Othor-reg-generator-frontend/memory/MEMORY.md
+      1 - [Backend dev server](backend-dev-server.md) — RAG backend at lo
+        calhost:8080, CORS + verified response shapes
+
+● The frontend is built, and I verified it end-to-end against your running
+  backend on localhost:8080.
+
+  What was done
+
+  Cleanup — removed the CNA template (page.tsx, boilerplate SVGs), rewrote
+  layout.tsx/globals.css. No auth code was present.
+
+  API layer (lib/)
+  - api/client.ts — single Axios instance; one response interceptor funnels
+    every failure through api/errors.ts
+  - api/errors.ts — normalizes anything thrown into { status, code, message, 
+    fieldErrors }; strips Spring/Java stack traces; maps
+    400/404/409/413/415/422/429/500/502/503/504 + network/timeout to user-safe
+    messages
+  - api/pagination.ts — normalizes the { content, page, size, totalElements, 
+    totalPages } envelope (also tolerates Spring's nested form)
+  - knowledge-base-api.ts / document-api.ts / rag-api.ts — 1:1 with the allowed
+    endpoints, nothing invented
+  - types/api.ts — centralized models aligned to the actual responses
+  - validation/schemas.ts — Zod schemas (KB name ≤255, description ≤4000;
+    question ≤4000; topK 0–50 int; minScore 0–1) + validatePdfFile (selected /
+    .pdf ext / MIME / size ≤ NEXT_PUBLIC_MAX_UPLOAD_MB)
+
+  Hooks — useKnowledgeBases, useKnowledgeBase, useCreateKnowledgeBase,
+  useDeleteKnowledgeBase, useDocuments, useDocument, useUploadDocument,
+  useDeleteDocument, useReingestDocument, useQueryKnowledgeBase. Documents list
+  auto-polls every 3s while any doc is PENDING/PROCESSING/EMBEDDING, stops when
+  all COMPLETED/FAILED.
+
+  Pages
+  - /knowledge-bases — server-paginated list, skeletons, empty state, create
+    dialog, delete confirmation (failed delete keeps the item + shows error)
+  - /knowledge-bases/[id] — Documents tab (drag-drop + Browse upload, progress,
+    all backend fields incl. failureReason/retryCount, status badges with glyph
+    not color-only, Retry → POST /documents/{id}/ingest, delete with confirm)
+    and Ask questions tab (question + Advanced Options topK/minScore, loading
+    state, question/options preserved on failure, retry, prominent answer +
+    Sources list showing documentId/chunkId/ordinal/page/score/excerpt labelled
+    as the evidence)
+
+  Reusable UX — ApiErrorMessage, FieldError, InlineError, toast system,
+  ConfirmDialog, Skeleton, EmptyState, Pagination, responsive throughout with
+  Tailwind utilities.
+
+  Verification
+
+  npm run build ✓ · npx tsc --noEmit ✓ · eslint ✓ (0 warnings). Against the live
+  backend via headless Chrome + curl: list/detail render real data; create KB →
+  upload PDF (file field) → doc goes PENDING → PROCESSING → query returns
+  answer+sources → delete (204). All 10 endpoints hit with the exact
+  methods/paths specified.
+
+  .env.example / .env.local added (NEXT_PUBLIC_API_URL,
+  NEXT_PUBLIC_MAX_UPLOAD_MB); README rewritten.
+
+❯ <ide_opened_file>The user opened the file /home/thakshara/Documents/Projects/ 
+  Othor/reg-generator-frontend/app/providers.tsx in the IDE. This may or may    
+  not be related to the current task.</ide_opened_file>                         
+
+❯ Update the existing Next.js RAG Generator frontend.                           
+                                                                                
+  Do not change the backend API contract and do not create any new backend      
+  endpoints.                                                                    
+                                                                                
+  The main UI change is to make the Home page the primary RAG question-asking   
+  experience.                                                                   
+                                                                                
+  Keep all existing Knowledge Base management functionality and existing UI     
+  behavior unchanged unless it is necessary to support the new Home page flow.  
+                                                                                
+  The existing Create Knowledge Base popup/modal should remain as it is. Reuse  
+  the existing Create Knowledge Base popup from the current application when    
+  the user wants to create a new Knowledge Base. Do not redesign or replace its 
+  existing behavior.                                                            
+                                                                                
+  Change the Home page so that users can immediately ask questions against      
+  their available Knowledge Bases.                                              
+                                                                                
+  The Home page should load available Knowledge Bases using GET                 
+  /api/v1/knowledge-bases and allow the user to select one. Do not hardcode     
+  Knowledge Bases.                                                              
+                                                                                
+  The user should be able to create a new Knowledge Base from the Home page     
+  using the existing Create Knowledge Base popup/modal. After successful        
+  creation, refresh the Knowledge Base data and make the newly created          
+  Knowledge Base available for selection.                                       
+                                                                                
+  The main purpose of the Home page should be asking questions. Keep the        
+  interface clean, focused, responsive, and simple.                             
+                                                                                
+  The user should select a Knowledge Base, enter a question, and submit it      
+  using:                                                                        
+                                                                                
+  POST /api/v1/knowledge-bases/{knowledgeBaseId}/query                          
+                                                                                
+  Do not create or use another query endpoint.                                  
+                                                                                
+  The question is required and has a maximum length of 4000 characters.         
+                                                                                
+  Support topK from 0 to 50 and minScore from 0 to 1. Keep these options under  
+  Advanced Options so they do not distract from the main question-asking        
+  experience.                                                                   
+                                                                                
+  Use the existing React Query setup and API layer. Do not add duplicate API    
+  calls or duplicate state management.                                          
+                                                                                
+  The Home page should display the generated grounded answer clearly. Below the 
+  answer, display the sources returned by the backend, including the available  
+  document information, page, relevance score, excerpt, and other useful        
+  source metadata.                                                              
+                                                                                
+  Keep the existing /knowledge-bases page and its current functionality. Users  
+  should still be able to view, create, delete, and open Knowledge Bases from   
+  there.                                                                        
+                                                                                
+  Keep the existing /knowledge-bases/[id] page and its current functionality.   
+  Users should still be able to view the Knowledge Base details, upload PDF     
+  documents, monitor document ingestion, retry failed ingestion, and delete     
+  documents.                                                                    
+                                                                                
+  The Home page should provide a clear way to navigate to the existing          
+  Knowledge Base management/detail UI when the user wants to manage documents   
+  or inspect a Knowledge Base.                                                  
+
+  Read 2 files (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/app/layout.tsx)
+  ⎿  Added 16 lines, removed 2 lines
+      31        <body className="flex min-h-full flex-col bg-slate-50 tex
+          t-slate-900">
+      32          <Providers>
+      33            <header className="border-b border-slate-200 bg-white
+          ">
+      34 -            <div className="mx-auto flex max-w-5xl items-center
+         - justify-between px-4 py-3 sm:px-6">                           
+      34 +            <div className="mx-auto flex max-w-5xl items-center
+         + justify-between gap-4 px-4 py-3 sm:px-6">                     
+      35                <Link
+      36 -                href="/knowledge-bases"                        
+      36 +                href="/"                                       
+      37                  className="flex items-center gap-2 rounded font
+          -semibold text-slate-900 focus-visible:outline-2 focus-visible:
+          outline-offset-2 focus-visible:outline-slate-900"
+      38                >
+      39                  <span
+     ...
+      44                  </span>
+      45                  RAG Generator
+      46                </Link>
+      47 +              <nav className="flex items-center gap-1 text-sm">
+      48 +                <Link                                          
+      49 +                  href="/"                                     
+      50 +                  className="rounded px-3 py-1.5 font-medium te
+         +xt-slate-600 hover:bg-slate-100 hover:text-slate-900 focus-visi
+         +ble:outline-2 focus-visible:outline-offset-2 focus-visible:outl
+         +ine-slate-900"                                                 
+      51 +                >                                              
+      52 +                  Ask                                          
+      53 +                </Link>                                        
+      54 +                <Link                                          
+      55 +                  href="/knowledge-bases"                      
+      56 +                  className="rounded px-3 py-1.5 font-medium te
+         +xt-slate-600 hover:bg-slate-100 hover:text-slate-900 focus-visi
+         +ble:outline-2 focus-visible:outline-offset-2 focus-visible:outl
+         +ine-slate-900"                                                 
+      57 +                >                                              
+      58 +                  Knowledge bases                              
+      59 +                </Link>                                        
+      60 +              </nav>                                           
+      61              </div>
+      62            </header>
+      63            <main className="mx-auto w-full max-w-5xl flex-1 px-4
+           py-6 sm:px-6 sm:py-8">
+
+● Write(~/Documents/Projects/Othor/reg-generator-frontend/app/page.tsx)
+  ⎿  Added 154 lines, removed 2 lines
+        1 -import { redirect } from "next/navigation";                   
+        1 +"use client";                                                 
+        2  
+        3 +import { useEffect, useMemo, useState } from "react";         
+        4 +import Link from "next/link";                                 
+        5 +import { Card } from "@/components/ui/card";                  
+        6 +import { Button } from "@/components/ui/button";              
+        7 +import { Skeleton } from "@/components/ui/skeleton";          
+        8 +import { EmptyState } from "@/components/ui/empty-state";     
+        9 +import { ApiErrorMessage } from "@/components/errors/api-error
+          +-message";                                                    
+       10 +import { AskQuestions } from "@/components/rag/ask-questions";
+       11 +import { CreateKnowledgeBaseDialog } from "@/components/knowle
+          +dge-bases/create-kb-dialog";                                  
+       12 +import { useKnowledgeBases } from "@/lib/hooks/use-knowledge-b
+          +ases";                                                        
+       13 +import type { KnowledgeBase } from "@/lib/types/api";         
+       14 +                                                              
+       15 +// One page is plenty for a picker; management/pagination live
+          +s on /knowledge-bases.                                        
+       16 +const PICKER_PAGE_SIZE = 100;                                 
+       17 +                                                              
+       18  export default function HomePage() {
+        4 -  redirect("/knowledge-bases");                               
+       19 +  const [selectedId, setSelectedId] = useState<string | null>(
+          +null);                                                        
+       20 +  const [createOpen, setCreateOpen] = useState(false);        
+       21 +  // KBs created from this page, kept selectable immediately e
+          +ven before the                                                
+       22 +  // list query refetch resolves. Deduped against the fetched 
+          +list below.                                                   
+       23 +  const [locallyCreated, setLocallyCreated] = useState<Knowled
+          +geBase[]>([]);                                                
+       24 +                                                              
+       25 +  const { data, isLoading, isError, error, isFetching, refetch
+          + } =                                                          
+       26 +    useKnowledgeBases({ page: 0, size: PICKER_PAGE_SIZE });   
+       27 +                                                              
+       28 +  const options = useMemo<KnowledgeBase[]>(() => {            
+       29 +    const seen = new Set<string>();                           
+       30 +    const merged: KnowledgeBase[] = [];                       
+       31 +    for (const kb of [...locallyCreated, ...(data?.content ?? 
+          +[])]) {                                                       
+       32 +      if (seen.has(kb.id)) continue;                          
+       33 +      seen.add(kb.id);                                        
+       34 +      merged.push(kb);                                        
+       35 +    }                                                         
+       36 +    return merged;                                            
+       37 +  }, [data?.content, locallyCreated]);                        
+       38 +                                                              
+       39 +  // Auto-select the first knowledge base so the user can ask 
+          +immediately.                                                  
+       40 +  // Never overrides a still-valid manual/created selection.  
+       41 +  useEffect(() => {                                           
+       42 +    if (options.length === 0) return;                         
+       43 +    if (!selectedId || !options.some((kb) => kb.id === selecte
+          +dId)) {                                                       
+       44 +      setSelectedId(options[0].id);                           
+       45 +    }                                                         
+       46 +  }, [options, selectedId]);                                  
+       47 +                                                              
+       48 +  const selectedKb = options.find((kb) => kb.id === selectedId
+          +) ?? null;                                                    
+       49 +                                                              
+       50 +  function handleCreated(kb: KnowledgeBase) {                 
+       51 +    setLocallyCreated((prev) => [kb, ...prev.filter((k) => k.i
+          +d !== kb.id)]);                                               
+       52 +    setSelectedId(kb.id);                                     
+       53 +  }                                                           
+       54 +                                                              
+       55 +  return (                                                    
+       56 +    <div className="space-y-6">                               
+       57 +      <div>                                                   
+       58 +        <h1 className="text-xl font-semibold text-slate-900 sm
+          +:text-2xl">                                                   
+       59 +          Ask your knowledge bases                            
+       60 +        </h1>                                                 
+       61 +        <p className="mt-1 text-sm text-slate-600">           
+       62 +          Pick a knowledge base, ask a question, and get an an
+          +swer grounded in its                                          
+       63 +          documents — with the sources it used.               
+       64 +        </p>                                                  
+       65 +      </div>                                                  
+       66 +                                                              
+       67 +      <Card className="p-4 sm:p-5">                           
+       68 +        {isLoading && (                                       
+       69 +          <div className="space-y-2">                         
+       70 +            <Skeleton className="h-4 w-32" />                 
+       71 +            <Skeleton className="h-10 w-full" />              
+       72 +          </div>                                              
+       73 +        )}                                                    
+       74 +                                                              
+       75 +        {isError && !isLoading && (                           
+       76 +          <ApiErrorMessage                                    
+       77 +            error={error}                                     
+       78 +            title="Could not load knowledge bases"            
+       79 +            onRetry={() => refetch()}                         
+       80 +            retrying={isFetching}                             
+       81 +          />                                                  
+       82 +        )}                                                    
+       83 +                                                              
+       84 +        {!isLoading && !isError && options.length === 0 && (  
+       85 +          <EmptyState                                         
+       86 +            title="No knowledge bases yet."                   
+       87 +            description="Create a knowledge base and upload PD
+          +Fs to start asking questions."                                
+       88 +            action={                                          
+       89 +              <Button onClick={() => setCreateOpen(true)}>    
+       90 +                Create knowledge base                         
+       91 +              </Button>                                       
+       92 +            }                                                 
+       93 +          />                                                  
+       94 +        )}                                                    
+       95 +                                                              
+       96 +        {!isLoading && !isError && options.length > 0 && (    
+       97 +          <div className="space-y-3">                         
+       98 +            <div className="flex flex-col gap-3 sm:flex-row sm
+          +:items-end">                                                  
+       99 +              <div className="flex-1">                        
+      100 +                <label                                        
+      101 +                  htmlFor="kb-select"                         
+      102 +                  className="mb-1.5 block text-sm font-medium 
+          +text-slate-800"                                               
+      103 +                >                                             
+      104 +                  Knowledge base                              
+      105 +                </label>                                      
+      106 +                <select                                       
+      107 +                  id="kb-select"                              
+      108 +                  value={selectedId ?? ""}                    
+      109 +                  onChange={(e) => setSelectedId(e.target.valu
+          +e)}                                                           
+      110 +                  className="block w-full rounded-md border bo
+          +rder-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shado
+          +w-sm focus:outline-2 focus:outline-offset-0 focus:outline-slat
+          +e-900"                                                        
+      111 +                >                                             
+      112 +                  {options.map((kb) => (                      
+      113 +                    <option key={kb.id} value={kb.id}>        
+      114 +                      {kb.name}                               
+      115 +                    </option>                                 
+      116 +                  ))}                                         
+      117 +                </select>                                     
+      118 +              </div>                                          
+      119 +              <div className="flex gap-2">                    
+      120 +                <Button variant="secondary" onClick={() => set
+          +CreateOpen(true)}>                                            
+      121 +                  New                                         
+      122 +                </Button>                                     
+      123 +              </div>                                          
+      124 +            </div>                                            
+      125 +                                                              
+      126 +            <div className="flex flex-wrap items-center gap-x-
+          +4 gap-y-1 text-sm">                                           
+      127 +              {selectedKb && (                                
+      128 +                <Link                                         
+      129 +                  href={`/knowledge-bases/${selectedKb.id}`}  
+      130 +                  className="font-medium text-slate-700 underl
+          +ine underline-offset-2 hover:text-slate-900"                  
+      131 +                >                                             
+      132 +                  Manage documents &amp; ingestion for “{selec
+          +tedKb.name}” →                                                
+      133 +                </Link>                                       
+      134 +              )}                                              
+      135 +              <Link                                           
+      136 +                href="/knowledge-bases"                       
+      137 +                className="text-slate-500 hover:text-slate-800
+          +"                                                             
+      138 +              >                                               
+      139 +                All knowledge bases                           
+      140 +              </Link>                                         
+      141 +            </div>                                            
+      142 +          </div>                                              
+      143 +        )}                                                    
+      144 +      </Card>                                                 
+      145 +                                                              
+      146 +      {selectedId && (                                        
+      147 +        <AskQuestions key={selectedId} knowledgeBaseId={select
+          +edId} />                                                      
+      148 +      )}                                                      
+      149 +                                                              
+      150 +      <CreateKnowledgeBaseDialog                              
+      151 +        open={createOpen}                                     
+      152 +        onClose={() => setCreateOpen(false)}                  
+      153 +        onCreated={handleCreated}                             
+      154 +      />                                                      
+      155 +    </div>                                                    
+      156 +  );                                                          
+      157  }
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/app/page.tsx)
+  ⎿  Added 1 line, removed 1 line
+      1  "use client";
+      2  
+      3 -import { useEffect, useMemo, useState } from "react";           
+      3 +import { useMemo, useState } from "react";                      
+      4  import Link from "next/link";
+      5  import { Card } from "@/components/ui/card";
+      6  import { Button } from "@/components/ui/button";
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/app/page.tsx)
+  ⎿  Added 2 lines, removed 1 line
+      16  const PICKER_PAGE_SIZE = 100;
+      17  
+      18  export default function HomePage() {
+      19 -  const [selectedId, setSelectedId] = useState<string | null>(n
+         -ull);                                                          
+      19 +  // The user's explicit choice (null until they pick / create 
+         +one).                                                          
+      20 +  const [chosenId, setChosenId] = useState<string | null>(null)
+         +;                                                              
+      21    const [createOpen, setCreateOpen] = useState(false);
+      22    // KBs created from this page, kept selectable immediately ev
+          en before the
+      23    // list query refetch resolves. Deduped against the fetched l
+          ist below.
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/app/page.tsx)
+  ⎿  Added 7 lines, removed 9 lines
+      37      return merged;
+      38    }, [data?.content, locallyCreated]);
+      39  
+      40 -  // Auto-select the first knowledge base so the user can ask i
+         -mmediately.                                                    
+      41 -  // Never overrides a still-valid manual/created selection.   
+      42 -  useEffect(() => {                                            
+      43 -    if (options.length === 0) return;                          
+      44 -    if (!selectedId || !options.some((kb) => kb.id === selected
+         -Id)) {                                                         
+      45 -      setSelectedId(options[0].id);                            
+      46 -    }                                                          
+      47 -  }, [options, selectedId]);                                   
+      40 +  // Derived, not stored: fall back to the first knowledge base
+         + so the user can                                               
+      41 +  // ask immediately, without an effect that syncs state.      
+      42 +  const selectedId =                                           
+      43 +    chosenId && options.some((kb) => kb.id === chosenId)       
+      44 +      ? chosenId                                               
+      45 +      : options[0]?.id ?? null;                                
+      46  
+      47    const selectedKb = options.find((kb) => kb.id === selectedId)
+           ?? null;
+      48  
+      49    function handleCreated(kb: KnowledgeBase) {
+      50      setLocallyCreated((prev) => [kb, ...prev.filter((k) => k.id
+           !== kb.id)]);
+      53 -    setSelectedId(kb.id);                                      
+      51 +    setChosenId(kb.id);                                        
+      52    }
+      53  
+      54    return (
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/app/page.tsx)
+  ⎿  Added 1 line, removed 1 line
+      105                  <select
+      106                    id="kb-select"
+      107                    value={selectedId ?? ""}
+      108 -                  onChange={(e) => setSelectedId(e.target.valu
+          -e)}                                                           
+      108 +                  onChange={(e) => setChosenId(e.target.value)
+          +}                                                             
+      109                    className="block w-full rounded-md border bo
+           rder-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shado
+           w-sm focus:outline-2 focus:outline-offset-0 focus:outline-slat
+           e-900"
+      110                  >
+      111                    {options.map((kb) => (
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+● Update(~/Documents/Projects/Othor/reg-generator-frontend/README.md)
+  ⎿  Added 1 line, removed 1 line
+      34  
+      35  | Path | Purpose |
+      36  | --- | --- |
+      37 -| `/` | Redirects to `/knowledge-bases` |                      
+      37 +| `/` | **Home / primary ask experience** — pick a knowledge ba
+         +se (loaded from `GET /api/v1/knowledge-bases`), create one via 
+         +the existing modal, ask a question (Advanced Options: `topK`, `
+         +minScore`), read the grounded answer + sources. Links out to th
+         +e management UI. |                                             
+      38  | `/knowledge-bases` | Paginated list; create / open / delete |
+      39  | `/knowledge-bases/[id]` | Two tabs: **Documents** (upload, st
+          atus polling, re-ingest, delete) and **Ask questions** (query +
+           grounded answer + sources) |
+      40  
+
+● Done. The Home page (/) is now the primary question-asking experience;
+  management pages are untouched.
+
+  Changes
+
+  app/page.tsx — replaced the /knowledge-bases redirect with the ask flow:
+  - Loads knowledge bases via the existing useKnowledgeBases hook (GET 
+    /api/v1/knowledge-bases, size=100) — nothing hardcoded. Skeleton /
+    error+retry / empty states.
+  - Native <select> to choose a KB. The active selection is derived (chosenId →
+    falls back to the first KB) so the user can ask immediately and there's no
+    state-sync effect.
+  - New button opens the existing CreateKnowledgeBaseDialog as-is. Its onCreated
+    callback merges the new KB into the picker locally and selects it right
+    away; the existing useCreateKnowledgeBase mutation already invalidates the
+    list so it refetches too.
+  - Reuses the existing <AskQuestions> component (question, required + ≤4000;
+    Advanced Options topK 0–50 / minScore 0–1; loading state; retry keeps the
+    question; POST /api/v1/knowledge-bases/{id}/query; grounded answer + full
+    source metadata via <AnswerDisplay>). Remounted with key={selectedId} so
+    switching KB resets cleanly.
+  - Navigation to management UI: “Manage documents & ingestion for {name} →”
+    (/knowledge-bases/{id}) and “All knowledge bases” (/knowledge-bases).
+
+  app/layout.tsx — logo now links to /; added header nav: Ask (/) and Knowledge 
+  bases (/knowledge-bases).
+
+  README.md — updated the routes table.
+
+  No backend, API-layer, hook, or contract changes. /knowledge-bases and
+  /knowledge-bases/[id] are unchanged.
+
+  Verified
+
+  tsc --noEmit, eslint, and next build all clean. Against the live backend on
+  :8080 via headless Chrome: Home renders the populated KB selector, advanced
+  options, manage links, and the answer/sources area; /knowledge-bases and the
+  detail page still load and list data; header nav renders on every page.
+
+❯ /compact                                                                      
+  ⎿  Compacted (ctrl+o to see full summary)
+  ⎿  Read ../../../../../.claude/projects/-home-thakshara-Documents-Projects-Oth
+     or-reg-generator-frontend/memory/MEMORY.md (2 lines)
+  ⎿  Read ../../../../../.claude/projects/-home-thakshara-Documents-Projects-Oth
+     or-reg-generator-frontend/memory/backend-dev-server.md (23 lines)
